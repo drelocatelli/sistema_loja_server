@@ -17,7 +17,17 @@ const Colaborator = sequelize.define('colaborator', {
     rg: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    deleted_at: {
+        type: DataTypes.DATE,
+        allowNull: true
     }
+},
+{
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
 });
 
 module.exports = Colaborator;

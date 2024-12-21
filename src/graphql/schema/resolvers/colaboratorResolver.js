@@ -41,13 +41,14 @@ module.exports = {
         },
 
         deleteColaborator: async (_, {id}) => {
-            const collaborator = await Colaborator.findByPk(id);
+            const colaborator = await Colaborator.findByPk(id);
 
-            if(!collaborator) {
+            if(!colaborator) {
                 throw new Error('Collaborator not found!');
             }
 
-            await collaborator.destroy();
+            colaborator.deleted_at = new Date();
+            await colaborator.save();
             return `Collaborator with ID ${id} deleted successfully.`;
         }
     }

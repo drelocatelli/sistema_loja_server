@@ -9,7 +9,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable('colaborators', {
+    await queryInterface.createTable('clients', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,19 +24,43 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      role: {
-        allowNull: false,
+      rg: {
+        allowNull: true,
         type: Sequelize.STRING
       },
-      rg: {
-        allowNull: false,
+      cpf: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      phone: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      address: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      cep: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      city: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      state: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      country: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       deleted_at: {
         allowNull: true,
         type: Sequelize.DATE
       }
-    },
+    }
   );
   },
 
@@ -47,7 +71,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('colaborators');
-
+    await queryInterface.dropTable('clients');
   }
 };
