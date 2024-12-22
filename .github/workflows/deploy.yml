@@ -3,25 +3,25 @@ name: deploy to server
 on:
   push:
     branches:
-    - main
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Add SSH host to known hosts
-      run: |
-        ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-    
-    - name: Deploy on server and restart server
-      run: |
-        ssh -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${{ secrets.HOST }} "cd ~/containers/node/raccoontech && git pull origin main && npm i && npm run start"
+      - name: Add SSH host to known hosts
+        run: |
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      - name: Deploy on server and restart server
+        run: |
+          ssh -o HostkeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@${{ secrets.HOST }} "cd ~/containers/node/raccoontech && git pull origin main && npm i && npm run start"
