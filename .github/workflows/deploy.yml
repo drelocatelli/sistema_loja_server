@@ -24,4 +24,4 @@ jobs:
     
     - name: Deploy on server and restart server
       run: |
-        ssh -o StrictHostKeyChecking=no root@${{ secrets.HOST }} "cd ~/containers/node/raccoontech && git pull origin main && npm i && npm run start"
+        ssh -v -oHostKeyAlgorithms=+ssh-rsa root@${{ secrets.HOST }} "cd ~/containers/node/raccoontech && git pull origin main && npm i && npm run start"
