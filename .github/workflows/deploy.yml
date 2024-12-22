@@ -17,8 +17,12 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    
-      
-    - name: Deploy on server
+
+    - name: Add SSH host to known hosts
       run: |
-        ssh root@50.6.193.168 "cd ~/containers/node/raccoontech && git pull origin main"
+        mkdir ~/.ssh
+        ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+    
+    - name: Deploy on server and restart server
+      run: |
+        ssh -o StrictHostKeyChecking=no root@${{ secrets.HOST }} "cd ~/containers/node/raccoontech && git pull origin main && npm i && npm run start"
