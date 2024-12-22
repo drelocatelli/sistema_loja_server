@@ -29,12 +29,25 @@ const typeDefs = gql `
         deleted_at: String
     }
 
+    type Login {
+        id: ID!
+        password: String!
+    }
+
+    type LoginResponse {
+        error: Boolean!
+        message: String!
+        data: Login
+    }
+
     type Query {
         getColaborators: [Colaborator]
         getColaborator(id: ID!): Colaborator
 
         getClients: [Client]
         getClient(id: ID!): Client
+
+        login(password: String!): LoginResponse
     }
 
     type Mutation {
