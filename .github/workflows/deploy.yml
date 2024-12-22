@@ -3,13 +3,22 @@ name: deploy to server
 on:
   push:
     branches:
-      - main
+    - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy on server
-      run: |
-        ssh root@0.6.193.168 "cd ~/containers/node/raccoontech && git pull origin main"
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+    uses: webfactory/ssh-agent@v0.5.3
+    with:
+      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    
+      
+    - name: Deploy on server
+    run: |
+      ssh root@0.6.193.168 "cd ~/containers/node/raccoontech && git pull origin main"
