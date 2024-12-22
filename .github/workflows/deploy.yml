@@ -20,7 +20,6 @@ jobs:
 
     - name: Add SSH host to known hosts
       run: |
-        mkdir ~/.ssh
         ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
     
     - name: Deploy on server and restart server
