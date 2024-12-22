@@ -38,4 +38,5 @@ jobs:
           git pull origin main
           npm install
           npx sequelize-cli db:migrate
+          docker compose up -d --build
         EOF
