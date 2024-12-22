@@ -37,5 +37,5 @@ jobs:
           cd ~/containers/node/raccoontech
           git pull origin main
           npm install
-          npm run start
+          npx sequelize-cli db:migrate
         EOF
