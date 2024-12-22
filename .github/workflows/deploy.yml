@@ -21,4 +21,4 @@ jobs:
       
     - name: Deploy on server
       run: |
-        ssh -o HostkeyAlgorithms=+ssh-rsa root@50.6.193.168 "cd ~/containers/node/raccoontech && git pull origin main"
+        ssh root@50.6.193.168 "cd ~/containers/node/raccoontech && git pull origin main"
