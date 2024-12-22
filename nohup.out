@@ -1,0 +1,24 @@
+
+> sistema_loja_server@1.0.0 start
+> node index.js
+
+(node:15239) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+🚀  Server ready at http://localhost:4000/
+Database synced successfully
+
+> sistema_loja_server@1.0.0 start
+> node index.js
+
+(node:15286) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+🚀  Server ready at http://localhost:4000/
+Database synced successfully
+
+> sistema_loja_server@1.0.0 start
+> node index.js
+
+(node:17834) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+🚀  Server ready at http://localhost:4000/
+Database synced successfully
