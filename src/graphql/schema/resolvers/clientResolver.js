@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Client = require('../../../models/Client');
 
 module.exports = {
@@ -59,8 +60,27 @@ module.exports = {
             client.deleted_at = new Date();
 
             await client.save();
-            // await client.destroy();
-            return `Client with ID ${id} deleted successfully.`;
+
+            return client;
+        },
+        deleteClients: async (_, {ids}) => {
+            const clients = await Client.findAll({
+                where: {
+                    id: {
+                        [Op.in]: ids
+                    }
+                }
+            });
+
+            const deletedClients = [];
+
+            clients.forEach(async (client) => {
+                client.deleted_at = new Date();
+                deletedClients.push(client);
+                await client.save();
+            }); 
+
+            return deletedClients;
         }
     }
 }
