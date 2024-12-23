@@ -1,5 +1,7 @@
 const { Op } = require('sequelize');
 const Client = require('../../../models/Client');
+const authMiddleware = require('../../../middlewares/loginMiddleware');
+const Login = require('../../../models/Login');
 
 module.exports = {
     Query: {
@@ -12,7 +14,11 @@ module.exports = {
     },
 
     Mutation: {
-        createClient: async (_, {name, email, rg, cpf, phone, address, cep, city, state, country}) => {
+        createClient: authMiddleware(async (_, {name, email, rg, cpf, phone, address, cep, city, state, country}, context) => {
+            if(!context.user) {
+                throw new Error('Usuário não autenticado!');
+            }
+
             const newClient = await Client.create({
                 name,
                 email,
@@ -27,7 +33,7 @@ module.exports = {
             });
 
             return newClient;
-        },
+        }),
         updateClient: async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
             const client = await Client.findByPk(id);
 

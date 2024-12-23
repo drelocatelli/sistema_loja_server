@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server');
+const {gql} = require('apollo-server-express');
 
 const typeDefs = gql `
     type Colaborator {
@@ -37,7 +37,7 @@ const typeDefs = gql `
     type LoginResponse {
         error: Boolean!
         message: String!
-        data: Login
+        token: String!
     }
 
     type Query {
