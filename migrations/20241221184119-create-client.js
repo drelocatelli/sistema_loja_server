@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       email: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
       rg: {
@@ -58,6 +58,14 @@ module.exports = {
       },
       deleted_at: {
         allowNull: true,
+        type: Sequelize.DATE
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
         type: Sequelize.DATE
       }
     }

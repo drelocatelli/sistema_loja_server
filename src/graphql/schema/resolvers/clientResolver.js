@@ -35,7 +35,7 @@ module.exports = {
 
             return newClient;
         }),
-        updateClient: async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
+        updateClient: authMiddleware(async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
             const client = await Client.findByPk(id);
 
             if(!client) {
@@ -56,8 +56,8 @@ module.exports = {
             await client.save();
 
             return client;
-        },
-        deleteClient: async (_, {id}) => {
+        }),
+        deleteClient: authMiddleware(async (_, {id}) => {
             const client = await Client.findByPk(id);
 
             if(!client) {
@@ -69,8 +69,8 @@ module.exports = {
             await client.save();
 
             return client;
-        },
-        deleteClients: async (_, {ids}) => {
+        }),
+        deleteClients: authMiddleware(async (_, {ids}) => {
             const clients = await Client.findAll({
                 where: {
                     id: {
@@ -88,6 +88,6 @@ module.exports = {
             }); 
 
             return deletedClients;
-        }
+        })
     }
 }
