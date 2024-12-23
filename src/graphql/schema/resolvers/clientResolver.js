@@ -1,4 +1,7 @@
+const { Op } = require('sequelize');
 const Client = require('../../../models/Client');
+const authMiddleware = require('../../../middlewares/loginMiddleware');
+const Login = require('../../../models/Login');
 
 module.exports = {
     Query: {
@@ -11,7 +14,11 @@ module.exports = {
     },
 
     Mutation: {
-        createClient: async (_, {name, email, rg, cpf, phone, address, cep, city, state, country}) => {
+        createClient: authMiddleware(async (_, {name, email, rg, cpf, phone, address, cep, city, state, country}, context) => {
+            if(!context.user) {
+                throw new Error('Usuário não autenticado!');
+            }
+
             const newClient = await Client.create({
                 name,
                 email,
@@ -25,9 +32,10 @@ module.exports = {
                 country
             });
 
+
             return newClient;
-        },
-        updateClient: async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
+        }),
+        updateClient: authMiddleware(async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
             const client = await Client.findByPk(id);
 
             if(!client) {
@@ -48,8 +56,8 @@ module.exports = {
             await client.save();
 
             return client;
-        },
-        deleteClient: async (_, {id}) => {
+        }),
+        deleteClient: authMiddleware(async (_, {id}) => {
             const client = await Client.findByPk(id);
 
             if(!client) {
@@ -59,8 +67,27 @@ module.exports = {
             client.deleted_at = new Date();
 
             await client.save();
-            // await client.destroy();
-            return `Client with ID ${id} deleted successfully.`;
-        }
+
+            return client;
+        }),
+        deleteClients: authMiddleware(async (_, {ids}) => {
+            const clients = await Client.findAll({
+                where: {
+                    id: {
+                        [Op.in]: ids
+                    }
+                }
+            });
+
+            const deletedClients = [];
+
+            clients.forEach(async (client) => {
+                client.deleted_at = new Date();
+                deletedClients.push(client);
+                await client.save();
+            }); 
+
+            return deletedClients;
+        })
     }
 }

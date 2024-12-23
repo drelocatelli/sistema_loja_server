@@ -6,7 +6,6 @@ const resolvers = {
   Query: {
     ...colaboratorResolver.Query,
     ...clientResolver.Query,
-    ...loginResolver.Query
   },
   Mutation: {
     ...colaboratorResolver.Mutation,
