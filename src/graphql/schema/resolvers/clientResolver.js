@@ -32,6 +32,7 @@ module.exports = {
                 country
             });
 
+
             return newClient;
         }),
         updateClient: async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
