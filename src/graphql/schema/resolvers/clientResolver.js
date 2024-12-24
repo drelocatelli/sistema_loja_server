@@ -4,18 +4,24 @@ const authMiddleware = require('../../../middlewares/loginMiddleware');
 
 module.exports = {
     Query: {
-        getClients: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null}) => {
+        getClients: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
             const offset = (page - 1) * pageSize;
 
             const props = {
                 order: [['name', 'ASC']],
                 limit: pageSize,
-                offset
+                offset,
             };
 
             if(searchTerm && searchTerm.length != 0) {
                 const where = searchTerm ? { name: { [Op.like]: `%${searchTerm}%` } } : {};
                 props.where = where;
+            }
+
+            if(!deleted) {
+                props.where = {
+                    deleted_at: { [Op.is]: null }
+                };
             }
             
             const {count, rows} = await Client.findAndCountAll(props);

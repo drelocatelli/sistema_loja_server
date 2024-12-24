@@ -56,7 +56,7 @@ const typeDefs = gql `
         getColaborators: [Colaborator]
         getColaborator(id: ID!): Colaborator
 
-        getClients(page: Int, pageSize: Int, searchTerm: String): ClientsResponse
+        getClients(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ClientsResponse
         getClient(id: ID!): Client
         deleteClient(id: ID!): Client
 
