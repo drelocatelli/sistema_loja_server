@@ -25,6 +25,7 @@ services:
       MYSQL_USER: "${DB_USER}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "1"
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
     ports:
       - "${DB_PORT:-3306}:3306"  # Define 3306 como valor padrão
