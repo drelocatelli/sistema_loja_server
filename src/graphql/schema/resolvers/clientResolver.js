@@ -1,16 +1,43 @@
 const { Op } = require('sequelize');
 const Client = require('../../../models/Client');
 const authMiddleware = require('../../../middlewares/loginMiddleware');
-const Login = require('../../../models/Login');
 
 module.exports = {
     Query: {
-        getClients: async () => {
-            return await Client.findAll();
-        },
-        getClient: async (_, {id}) => {
+        getClients: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null}) => {
+            const offset = (page - 1) * pageSize;
+
+            const props = {
+                order: [['name', 'ASC']],
+                limit: pageSize,
+                offset
+            };
+
+            if(searchTerm && searchTerm.length != 0) {
+                const where = searchTerm ? { name: { [Op.like]: `%${searchTerm}%` } } : {};
+                props.where = where;
+            }
+            
+            const {count, rows} = await Client.findAndCountAll(props);
+
+            const totalPages = Math.ceil(count / pageSize);
+
+            const data = {
+                clients: rows,
+                pagination: {
+                    totalRecords: count,
+                    totalPages: totalPages,
+                    currentPage: page,
+                    pageSize: pageSize
+                }
+            };
+
+            return data;
+        }),
+
+        getClient: authMiddleware(async (_, {id}) => {
             return await Client.findByPk(id);
-        }
+        })
     },
 
     Mutation: {

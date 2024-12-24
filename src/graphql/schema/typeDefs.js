@@ -29,6 +29,18 @@ const typeDefs = gql `
         deleted_at: String
     }
 
+    type PaginationInfo {
+        totalRecords: Int!
+        totalPages: Int!
+        currentPage: Int!
+        pageSize: Int!
+    }
+
+    type ClientsResponse {
+        clients: [Client]
+        pagination: PaginationInfo
+    }
+
     type Login {
         id: ID!
         password: String!
@@ -44,8 +56,9 @@ const typeDefs = gql `
         getColaborators: [Colaborator]
         getColaborator(id: ID!): Colaborator
 
-        getClients: [Client]
+        getClients(page: Int, pageSize: Int, searchTerm: String): ClientsResponse
         getClient(id: ID!): Client
+        deleteClient(id: ID!): Client
 
     }
 
