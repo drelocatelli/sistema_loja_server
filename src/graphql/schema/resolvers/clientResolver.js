@@ -13,16 +13,17 @@ module.exports = {
                 offset,
             };
 
+            const condition = {};
+
             if(searchTerm && searchTerm.length != 0) {
-                const where = searchTerm ? { name: { [Op.like]: `%${searchTerm}%` } } : {};
-                props.where = where;
+                condition.name = {[Op.like] : `%${searchTerm}%`};
             }
 
             if(!deleted) {
-                props.where = {
-                    deleted_at: { [Op.is]: null }
-                };
+                condition.deleted_at = {[Op.eq] : null};
             }
+
+            props.where = condition;
             
             const {count, rows} = await Client.findAndCountAll(props);
 
