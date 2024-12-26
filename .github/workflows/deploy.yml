@@ -36,6 +36,7 @@ jobs:
           # Deploy the app
           cd ~/containers/node/raccoontech
           git pull origin main
-          npm install
-          npm run start
+          yarn install
+          npx sequelize-cli db:migrate
+          docker compose up -d --build
         EOF

@@ -1,18 +1,58 @@
 const { Op } = require('sequelize');
 const Client = require('../../../models/Client');
+const authMiddleware = require('../../../middlewares/loginMiddleware');
 
 module.exports = {
     Query: {
-        getClients: async () => {
-            return await Client.findAll();
-        },
-        getClient: async (_, {id}) => {
+        getClients: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
+            const offset = (page - 1) * pageSize;
+
+            const props = {
+                order: [['name', 'ASC']],
+                limit: pageSize,
+                offset,
+            };
+
+            const condition = {};
+
+            if(searchTerm && searchTerm.length != 0) {
+                condition.name = {[Op.like] : `%${searchTerm}%`};
+            }
+
+            if(!deleted) {
+                condition.deleted_at = {[Op.eq] : null};
+            }
+
+            props.where = condition;
+            
+            const {count, rows} = await Client.findAndCountAll(props);
+
+            const totalPages = Math.ceil(count / pageSize);
+
+            const data = {
+                clients: rows,
+                pagination: {
+                    totalRecords: count,
+                    totalPages: totalPages,
+                    currentPage: page,
+                    pageSize: pageSize
+                }
+            };
+
+            return data;
+        }),
+
+        getClient: authMiddleware(async (_, {id}) => {
             return await Client.findByPk(id);
-        }
+        })
     },
 
     Mutation: {
-        createClient: async (_, {name, email, rg, cpf, phone, address, cep, city, state, country}) => {
+        createClient: authMiddleware(async (_, {name, email, rg, cpf, phone, address, cep, city, state, country}, context) => {
+            if(!context.user) {
+                throw new Error('Usuário não autenticado!');
+            }
+
             const newClient = await Client.create({
                 name,
                 email,
@@ -26,9 +66,10 @@ module.exports = {
                 country
             });
 
+
             return newClient;
-        },
-        updateClient: async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
+        }),
+        updateClient: authMiddleware(async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
             const client = await Client.findByPk(id);
 
             if(!client) {
@@ -49,8 +90,8 @@ module.exports = {
             await client.save();
 
             return client;
-        },
-        deleteClient: async (_, {id}) => {
+        }),
+        deleteClient: authMiddleware(async (_, {id}) => {
             const client = await Client.findByPk(id);
 
             if(!client) {
@@ -62,8 +103,8 @@ module.exports = {
             await client.save();
 
             return client;
-        },
-        deleteClients: async (_, {ids}) => {
+        }),
+        deleteClients: authMiddleware(async (_, {ids}) => {
             const clients = await Client.findAll({
                 where: {
                     id: {
@@ -81,6 +122,6 @@ module.exports = {
             }); 
 
             return deletedClients;
-        }
+        })
     }
 }

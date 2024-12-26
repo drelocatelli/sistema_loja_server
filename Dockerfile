@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instale as dependências do projeto
-RUN npm install
+RUN yarn install
 
 # Copie todos os arquivos do projeto para o diretório de trabalho do container
 COPY . .

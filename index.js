@@ -1,22 +1,32 @@
-const {ApolloServer} = require('apollo-server');
+const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./src/graphql/schema/typeDefs');
 const resolvers = require('./src/graphql/schema/resolvers');
 const sequelize = require('./db');
+const express = require('express');
+
+const app = express();
 
 const server = new ApolloServer({ 
   typeDefs, 
   resolvers,
-  formatResponse(response) {
+  context: ({req}) => {
     return {
-      data: response.data
+      req
     }
   }
  });
 
-sequelize.sync().then(() => {
-    console.log('Database synced successfully');
-  });
-  
-server.listen().then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
-});
+ 
+async function startServer() {
+  await server.start();
+  server.applyMiddleware({app, path: '/'});
+  sequelize.sync().then(() => {
+      console.log('Database synced successfully');
+    });
+    
+  app.listen(4000, () =>
+    console.log(`Servidor GraphQL rodando em http://localhost:4000${server.graphqlPath}`)
+  );
+}
+ 
+startServer();
