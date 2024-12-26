@@ -40,6 +40,25 @@ const typeDefs = gql `
         data: Login
     }
 
+    type Category {
+        id: ID!
+        name: String!
+    }
+
+    type CategoriesResponse {
+        categories: [Category]
+        pagination: PaginationInfo
+    }
+
+    type Sales {
+        id: ID!
+        serial: String!
+        client: Client!
+        colaborator: Colaborator!
+        category: Category!
+        Value: Float!
+    }
+
     type Query {
         getColaborators: [Colaborator]
         getColaborator(id: ID!): Colaborator
@@ -47,6 +66,11 @@ const typeDefs = gql `
         getClients: [Client]
         getClient(id: ID!): Client
 
+        getSales: [Sales]
+        getSale(id: ID!): Sales
+        
+        getCategories(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): CategoriesResponse
+        getCategory(id: ID!): Category
     }
 
     type Mutation {
@@ -61,6 +85,13 @@ const typeDefs = gql `
 
         login(password: String!): LoginResponse
 
+        createCategory(name: String!): Category
+        updateCategory(id: ID!, name: String): Category
+        deleteCategory(id: ID!): String
+
+        createSale(serial: String!, client: ID!, colaborator: ID!, category: ID!, Value: Float!): Sales
+        updateSale(id: ID!, serial: String, client: ID, colaborator: ID, category: ID, Value: Float): Sales
+        deleteSale(id: ID!): String
     }
 `;
 

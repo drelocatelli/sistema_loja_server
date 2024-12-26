@@ -1,17 +1,18 @@
+const authMiddleware = require('../../../middlewares/loginMiddleware');
 const Colaborator = require('../../../models/Colaborator');
 
 module.exports = {
     Query: {
-        getColaborators: async () => {
+        getColaborators: authMiddleware(async () => {
             return await Colaborator.findAll();
-        },
-        getColaborator: async (_, {id}) => {
+        }),
+        getColaborator: authMiddleware(async (_, {id}) => {
             return await Colaborator.findByPk(id);
-        }
+        })
     },
 
     Mutation: {
-        createColaborator: async (_, {name, email, role, rg}) => {
+        createColaborator: authMiddleware(async (_, {name, email, role, rg}) => {
             const newColaborator = await Colaborator.create({
                 name,
                 email,
@@ -20,9 +21,9 @@ module.exports = {
             });
 
             return newColaborator;
-        },
+        }),
 
-        updateColaborator: async (_, {id, name, email, role, rg}) => {
+        updateColaborator: authMiddleware(async (_, {id, name, email, role, rg}) => {
             const colaborator = await Colaborator.findByPk(id);
             // const collaborator = collaborators.find((collaborator) => collaborator.id === id);
 
@@ -38,9 +39,9 @@ module.exports = {
             await colaborator.save();
             
             return colaborator;
-        },
+        }),
 
-        deleteColaborator: async (_, {id}) => {
+        deleteColaborator: authMiddleware(async (_, {id}) => {
             const colaborator = await Colaborator.findByPk(id);
 
             if(!colaborator) {
@@ -50,6 +51,6 @@ module.exports = {
             colaborator.deleted_at = new Date();
             await colaborator.save();
             return `Collaborator with ID ${id} deleted successfully.`;
-        }
+        })
     }
 }
