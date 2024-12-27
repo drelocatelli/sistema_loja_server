@@ -49,6 +49,15 @@ module.exports = {
             }
             
             return data; 
+        }),
+        getSale: authMiddleware(async (_, {id}) => {
+            return await Sale.findByPk(id, {
+                include: [
+                    {model: Client},
+                    {model: Colaborator},
+                    {model: Category}
+                ]
+            });
         })
     },
 
