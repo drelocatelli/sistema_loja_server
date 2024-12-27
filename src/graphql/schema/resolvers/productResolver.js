@@ -70,9 +70,6 @@ module.exports = {
             return product;
         }),
         updateProduct: authMiddleware(async (_, {input}) => {
-            const category = await Category.findByPk(input.category_id);
-
-            await checkEntityExists(category, 'Categoria');
             
             const product = await Product.findByPk(input.id, {
                 include: [
