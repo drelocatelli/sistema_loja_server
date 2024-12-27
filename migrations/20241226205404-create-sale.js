@@ -17,7 +17,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      produto: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       serial: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      description: {
         allowNull: false,
         type: Sequelize.STRING
       },

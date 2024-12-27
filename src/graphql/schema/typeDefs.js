@@ -113,9 +113,11 @@ const typeDefs = gql `
 
     input SalesInput {
         serial: String!
-        client: ID!
-        colaborator: ID!
-        category: ID!
+        produto: String!
+        description: String
+        colaborator_id: ID!
+        client_id: ID!
+        category_id: ID!
         total: Float!
     }
 
