@@ -63,16 +63,13 @@ module.exports = {
 
     Mutation: {
         createSale: authMiddleware(async (_, {input}) => {
-            // const sale = await Sale.create(input);
-            // return sale;
-
             const client = await Client.findByPk(input.client_id);
             const colaborator = await Colaborator.findByPk(input.colaborator_id);
             const category = await Category.findByPk(input.category_id);
 
             await checkEntityExists(client, 'Cliente');
-            await checkEntityExists(client, 'Colaborador');
-            await checkEntityExists(client, 'Categoria');
+            await checkEntityExists(colaborator, 'Colaborador');
+            await checkEntityExists(category, 'Categoria');
 
             const sale = await Sale.create(input);
 
