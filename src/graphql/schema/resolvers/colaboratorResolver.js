@@ -19,23 +19,21 @@ module.exports = {
         }),
 
         updateColaborator: authMiddleware(async (_, {input}) => {
-            // const colaborator = await Colaborator.findByPk(id);
-            // // const collaborator = collaborators.find((collaborator) => collaborator.id === id);
+            const colaborator = await Colaborator.findByPk(input.id);
+            // const collaborator = collaborators.find((collaborator) => collaborator.id === id);
 
-            // if(!colaborator) {
-            //     throw new Error('Collaborator not found!');
-            // }
+            if(!colaborator) {
+                throw new Error('Collaborator not found!');
+            }
 
-            // colaborator.name = name || colaborator.name;
-            // colaborator.email = email || colaborator.email;
-            // colaborator.role = role || colaborator.role;
-            // colaborator.rg = rg || colaborator.rg;
+            colaborator.name = input.name || colaborator.name;
+            colaborator.email = input.email || colaborator.email;
+            colaborator.role = input.role || colaborator.role;
+            colaborator.rg = input.rg || colaborator.rg;
 
-            // await colaborator.save();
+            await colaborator.save();
             
-            // return colaborator;
-
-            return null
+            return colaborator;
         }),
 
         deleteColaborator: authMiddleware(async (_, {id}) => {

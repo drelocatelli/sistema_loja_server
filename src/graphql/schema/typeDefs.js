@@ -112,7 +112,6 @@ const typeDefs = gql `
 
         getClients(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ClientsResponse
         getClient(id: ID!): Client
-        deleteClient(id: ID!): Client
 
         getSales: [Sales]
         getSale(id: ID!): Sales
