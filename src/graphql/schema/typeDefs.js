@@ -107,7 +107,7 @@ const typeDefs = gql `
         serial: String!
         client: Client!
         colaborator: Colaborator!
-        produto: String!
+        product: Product!
         description: String
         category: Category!
         total: Float!
@@ -120,7 +120,7 @@ const typeDefs = gql `
 
     input SalesInput {
         serial: String!
-        produto: String!
+        product_id: ID!
         description: String
         colaborator_id: ID!
         client_id: ID!
@@ -130,7 +130,7 @@ const typeDefs = gql `
     input SalesUpdateInput {
         id: ID!, 
         serial: String
-        produto: String
+        product_id: ID
         description: String
         colaborator_id: ID!
         client_id: ID!

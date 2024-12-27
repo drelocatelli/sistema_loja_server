@@ -2,6 +2,7 @@ const authMiddleware = require('../../../middlewares/loginMiddleware');
 const Client = require('../../../models/Client');
 const Colaborator = require('../../../models/Colaborator');
 const Sale = require('../../../models/Sale');
+const Product = require('../../../models/Product');
 const { Op } = require('sequelize');
 const { checkEntityExists } = require('../../../utils');
 
@@ -17,6 +18,7 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
+                    {model: Product},
                 ]
             }
 
@@ -53,6 +55,7 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
+                    {model: Product},
                 ]
             });
         })
@@ -71,6 +74,8 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
+                    {model: Product},
+
                 ]
             });
 
@@ -88,13 +93,15 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
+                    {model: Product},
+
                 ]
             });
 
             await checkEntityExists(sale, 'Venda');
 
             sale.serial = input.serial || sale.serial;
-            sale.produto = input.produto || sale.produto;
+            sale.product_id = input.product_id || sale.product_id;
             sale.description = input.description || sale.description;
             sale.client_id = input.client_id || sale.client_id;
             sale.colaborator_id = input.colaborator_id || sale.colaborator_id;

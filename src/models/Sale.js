@@ -2,14 +2,15 @@ const {DataTypes} = require('sequelize');
 const sequelize = require('../../db.js');
 const Client = require('./Client.js');
 const Colaborator = require('./Colaborator.js');
+const Product = require('./Product.js');
 
 const Sale = sequelize.define('sales', {
     serial: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    produto: {
-        type: DataTypes.STRING,
+    product_id: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     description: {
@@ -51,5 +52,6 @@ const Sale = sequelize.define('sales', {
 // Define associations for Sale model
 Sale.belongsTo(Client, { foreignKey: 'client_id' });
 Sale.belongsTo(Colaborator, { foreignKey: 'colaborator_id' });
+Sale.belongsTo(Product, { foreignKey: 'product_id' });
 
 module.exports = Sale;
