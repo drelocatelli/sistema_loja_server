@@ -9,49 +9,42 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-
-    await queryInterface.createTable('sales', {
+    await queryInterface.createTable('products', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      produto: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      serial: {
+      name: {
         allowNull: false,
         type: Sequelize.STRING
       },
       description: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       },
-      client_id: {
+      category_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'clients',
+          model: 'categories',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      colaborator_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'colaborators',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },  
-      total: {
+      price: {
         allowNull: false,
         type: Sequelize.FLOAT
+      },
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      is_published: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       },
       created_at: {
         allowNull: false,
@@ -64,7 +57,7 @@ module.exports = {
       deleted_at: {
         allowNull: true,
         type: Sequelize.DATE
-      }  
+      }
     });
   },
 
@@ -75,6 +68,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable('sales');
+    await queryInterface.dropTable('products');
   }
 };

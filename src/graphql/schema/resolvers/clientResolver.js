@@ -95,7 +95,7 @@ module.exports = {
             const client = await Client.findByPk(id);
 
             if(!client) {
-                throw new Error('Client not found!');
+                throw new Error('Cliente não encontrado!');
             }
 
             client.deleted_at = new Date();

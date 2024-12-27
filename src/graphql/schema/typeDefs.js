@@ -124,7 +124,6 @@ const typeDefs = gql `
         description: String
         colaborator_id: ID!
         client_id: ID!
-        category_id: ID!
         total: Float!
     }
 
@@ -135,9 +134,43 @@ const typeDefs = gql `
         description: String
         colaborator_id: ID!
         client_id: ID!
-        category_id: ID!
         total: Float
     }
+
+    type Product {
+        id: ID!
+        name: String!
+        description: String
+        category: Category!
+        price: Float!
+        quantity: Int!
+        is_published: Boolean!
+    }
+
+    type ProductsResponse {
+        products: [Product]
+        pagination: PaginationInfo
+    }
+
+    input ProductInput {
+        name: String!
+        description: String
+        category_id: ID!
+        price: Float!
+        quantity: Int!
+        is_published: Boolean!
+    }
+
+    input ProductUpdateInput {
+        id: ID!
+        name: String
+        description: String
+        category_id: ID
+        price: Float
+        quantity: Int
+        is_published: Boolean
+    }
+
 
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ColaboratorResponse
@@ -152,6 +185,9 @@ const typeDefs = gql `
         getCategories(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): CategoriesResponse
         getAllCategories(deleted: Boolean): [Category]
         getCategory(id: ID!): Category
+
+        getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ProductsResponse
+        getProduct(id: ID!): Product
     }
 
     type Mutation {
@@ -173,6 +209,10 @@ const typeDefs = gql `
         createSale(input: SalesInput!): Sale
         updateSale(input: SalesUpdateInput!): Sale
         deleteSale(id: ID!): String
+
+        createProduct(input: ProductInput!): Product
+        updateProduct(input: ProductUpdateInput!): Product
+        deleteProduct(id: ID!): String
     }
 `;
 

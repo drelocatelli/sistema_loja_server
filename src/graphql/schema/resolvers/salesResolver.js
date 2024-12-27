@@ -1,5 +1,4 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
-const Category = require('../../../models/Category');
 const Client = require('../../../models/Client');
 const Colaborator = require('../../../models/Colaborator');
 const Sale = require('../../../models/Sale');
@@ -18,7 +17,6 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
-                    {model: Category}
                 ]
             }
 
@@ -55,7 +53,6 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
-                    {model: Category}
                 ]
             });
         })
@@ -65,18 +62,15 @@ module.exports = {
         createSale: authMiddleware(async (_, {input}) => {
             const client = await Client.findByPk(input.client_id);
             const colaborator = await Colaborator.findByPk(input.colaborator_id);
-            const category = await Category.findByPk(input.category_id);
 
             await checkEntityExists(client, 'Cliente');
             await checkEntityExists(colaborator, 'Colaborador');
-            await checkEntityExists(category, 'Categoria');
 
             const saleRequest = await Sale.create(input);
             const sale = await Sale.findByPk(saleRequest.id, {
                 include: [
                     {model: Client},
                     {model: Colaborator},
-                    {model: Category}
                 ]
             });
 
@@ -86,17 +80,14 @@ module.exports = {
         updateSale: authMiddleware(async (_, {input}) => {
             const client = await Client.findByPk(input.client_id);
             const colaborator = await Colaborator.findByPk(input.colaborator_id);
-            const category = await Category.findByPk(input.category_id);
 
             await checkEntityExists(client, 'Cliente');
             await checkEntityExists(colaborator, 'Colaborador');
-            await checkEntityExists(category, 'Categoria');
 
             const sale = await Sale.findByPk(input.id, {
                 include: [
                     {model: Client},
                     {model: Colaborator},
-                    {model: Category}
                 ]
             });
 
@@ -107,13 +98,22 @@ module.exports = {
             sale.description = input.description || sale.description;
             sale.client_id = input.client_id || sale.client_id;
             sale.colaborator_id = input.colaborator_id || sale.colaborator_id;
-            sale.category_id = input.category_id || sale.category_id;
             sale.total = input.total || sale.total;
 
             await sale.save();
 
             return sale;
 
+        }),
+        deleteSale: authMiddleware(async (_, {id}) => {
+            const sale = await Sale.findByPk(id);
+
+            await checkEntityExists(sale, 'Venda');
+
+            sale.deleted_at = new Date();
+            await sale.save();
+
+            return `Sale with ID ${id} deleted successfully.`;
         })
     }
 };
