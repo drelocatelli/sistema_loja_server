@@ -1,6 +1,7 @@
 const authMiddleware = require("../../../middlewares/loginMiddleware");
 const Category = require('../../../models/Category')
-const Product = require('../../../models/Product')
+const Product = require('../../../models/Product');
+const { checkEntityExists } = require("../../../utils");
 
 module.exports = {
     Query: {
@@ -99,9 +100,7 @@ module.exports = {
                 ]
             });
 
-            if(!product) {
-                throw new Error('Product not found!');
-            }
+            await checkEntityExists(product, 'Produto');    
 
             product.deleted_at = new Date();
 
