@@ -1,5 +1,8 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../../db.js');
+const Client = require('./Client.js');
+const Colaborator = require('./Colaborator.js');
+const Category = require('./Category.js');
 
 const Sale = sequelize.define('sales', {
     serial: {
@@ -49,5 +52,10 @@ const Sale = sequelize.define('sales', {
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
 });
+
+// Define associations for Sale model
+Sale.belongsTo(Client, { foreignKey: 'client_id' });
+Sale.belongsTo(Colaborator, { foreignKey: 'colaborator_id' });
+Sale.belongsTo(Category, { foreignKey: 'category_id' });
 
 module.exports = Sale;

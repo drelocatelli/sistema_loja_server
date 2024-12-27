@@ -111,6 +111,11 @@ const typeDefs = gql `
         total: Float!
     }
 
+    type SalesResponse {
+        sales: [Sale]
+        pagination: PaginationInfo
+    }
+
     input SalesInput {
         serial: String!
         produto: String!
@@ -128,7 +133,7 @@ const typeDefs = gql `
         getClients(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ClientsResponse
         getClient(id: ID!): Client
 
-        getSales: [Sale]
+        getSales(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): SalesResponse
         getSale(id: ID!): Sale
         
         getCategories(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): CategoriesResponse
