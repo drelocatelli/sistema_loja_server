@@ -1,10 +1,45 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
 const Colaborator = require('../../../models/Colaborator');
+const { Op } = require('sequelize');
 
 module.exports = {
     Query: {
-        getColaborators: authMiddleware(async () => {
-            return await Colaborator.findAll();
+        getColaborators: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
+            const offset = (page - 1) * pageSize;
+
+            const props = {
+                order: [['name', 'ASC']],
+                limit: pageSize,
+                offset,
+            }
+
+            const condition = {};
+
+            if(searchTerm && searchTerm.length != 0) {
+                condition.name = {[Op.like] : `%${searchTerm}%`};
+            }
+
+            if(!deleted) {
+                condition.deleted_at = {[Op.eq] : null};
+            }
+
+            props.where = condition;
+
+            const {count, rows} = await Colaborator.findAndCountAll(props);
+
+            const totalPages = Math.ceil(count / pageSize);
+
+            const data = {
+                colaborators: rows,
+                pagination: {
+                    totalRecords: count,
+                    totalPages: totalPages,
+                    currentPage: page,
+                    pageSize: pageSize
+                }
+            }
+            
+            return data;
         }),
         getColaborator: authMiddleware(async (_, {id}) => {
             return await Colaborator.findByPk(id);

@@ -16,6 +16,11 @@ const typeDefs = gql `
         deleted_at: String
     } 
 
+    type ColaboratorResponse {
+        colaborators: [Colaborator]
+        pagination: PaginationInfo
+    }
+
     input ColaboratorInput {
         name: String!
         email: String!
@@ -97,24 +102,32 @@ const typeDefs = gql `
         pagination: PaginationInfo
     }
 
-    type Sales {
+    type Sale {
         id: ID!
         serial: String!
         client: Client!
         colaborator: Colaborator!
         category: Category!
-        Value: Float!
+        total: Float!
+    }
+
+    input SalesInput {
+        serial: String!
+        client: ID!
+        colaborator: ID!
+        category: ID!
+        total: Float!
     }
 
     type Query {
-        getColaborators: [Colaborator]
+        getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
 
         getClients(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ClientsResponse
         getClient(id: ID!): Client
 
-        getSales: [Sales]
-        getSale(id: ID!): Sales
+        getSales: [Sale]
+        getSale(id: ID!): Sale
         
         getCategories(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): CategoriesResponse
         getAllCategories(deleted: Boolean): [Category]
@@ -137,8 +150,8 @@ const typeDefs = gql `
         updateCategory(id: ID!, name: String): Category
         deleteCategory(id: ID!): String
 
-        createSale(serial: String!, client: ID!, colaborator: ID!, category: ID!, Value: Float!): Sales
-        updateSale(id: ID!, serial: String, client: ID, colaborator: ID, category: ID, Value: Float): Sales
+        createSale(input: SalesInput!): Sale
+        updateSale(id: ID!, serial: String, client: ID, colaborator: ID, category: ID, Value: Float): Sale
         deleteSale(id: ID!): String
     }
 `;

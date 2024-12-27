@@ -51,6 +51,10 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      total: {
+        allowNull: false,
+        type: Sequelize.FLOAT
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
