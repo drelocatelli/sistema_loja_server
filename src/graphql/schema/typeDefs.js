@@ -7,10 +7,45 @@ const typeDefs = gql `
         email: String!
         role: String!
         rg: String!
+        date_of_birth: String!
+        marital_status: String!
+        gender: String!
+        full_address: String!
         created_at: String
         updated_at: String
         deleted_at: String
     } 
+
+    input ColaboratorInput {
+        name: String!
+        email: String!
+        role: String!
+        rg: String!
+        cpf: String
+        date_of_birth: String!
+        marital_status: String!
+        gender: String!
+        full_address: String!
+        created_at: String
+        updated_at: String
+        deleted_at: String
+    } 
+
+    input ColaboratorUpdateInput {
+        id: ID!
+        name: String
+        email: String
+        role: String
+        rg: String
+        cpf: String
+        date_of_birth: String
+        marital_status: String
+        gender: String
+        full_address: String
+        created_at: String
+        updated_at: String
+        deleted_at: String
+    }
 
     type Client {
         id: ID!
@@ -83,12 +118,13 @@ const typeDefs = gql `
         getSale(id: ID!): Sales
         
         getCategories(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): CategoriesResponse
+        getAllCategories(deleted: Boolean): [Category]
         getCategory(id: ID!): Category
     }
 
     type Mutation {
-        createColaborator(name: String!, email: String!, role: String!, rg: String!): Colaborator
-        updateColaborator(id: ID!, name: String, email: String, role: String, rg: String): Colaborator
+        createColaborator(input: ColaboratorInput!): Colaborator
+        updateColaborator(input: ColaboratorUpdateInput!): Colaborator
         deleteColaborator(id: ID!): String
 
         createClient(name: String!, email: String, rg: String, cpf: String, phone: String, address: String, cep: String, city: String, state: String, country: String): Client

@@ -4,6 +4,14 @@ const { Op } = require('sequelize');
 
 module.exports = {
     Query: {
+        getAllCategories: authMiddleware(async (_, deleted = false) => {
+            if(!deleted) {
+                return await Category.findAll({where: {deleted_at: null}});
+            }
+
+            return await Category.findAll();
+            
+        }),
         getCategories: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
             const offset = (page - 1) * pageSize;
 

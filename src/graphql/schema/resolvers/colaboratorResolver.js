@@ -12,33 +12,30 @@ module.exports = {
     },
 
     Mutation: {
-        createColaborator: authMiddleware(async (_, {name, email, role, rg}) => {
-            const newColaborator = await Colaborator.create({
-                name,
-                email,
-                role,
-                rg
-            });
+        createColaborator: authMiddleware(async (_, {input}) => {
+            const newColaborator = await Colaborator.create(input);
 
             return newColaborator;
         }),
 
-        updateColaborator: authMiddleware(async (_, {id, name, email, role, rg}) => {
-            const colaborator = await Colaborator.findByPk(id);
-            // const collaborator = collaborators.find((collaborator) => collaborator.id === id);
+        updateColaborator: authMiddleware(async (_, {input}) => {
+            // const colaborator = await Colaborator.findByPk(id);
+            // // const collaborator = collaborators.find((collaborator) => collaborator.id === id);
 
-            if(!colaborator) {
-                throw new Error('Collaborator not found!');
-            }
+            // if(!colaborator) {
+            //     throw new Error('Collaborator not found!');
+            // }
 
-            colaborator.name = name || colaborator.name;
-            colaborator.email = email || colaborator.email;
-            colaborator.role = role || colaborator.role;
-            colaborator.rg = rg || colaborator.rg;
+            // colaborator.name = name || colaborator.name;
+            // colaborator.email = email || colaborator.email;
+            // colaborator.role = role || colaborator.role;
+            // colaborator.rg = rg || colaborator.rg;
 
-            await colaborator.save();
+            // await colaborator.save();
             
-            return colaborator;
+            // return colaborator;
+
+            return null
         }),
 
         deleteColaborator: authMiddleware(async (_, {id}) => {
