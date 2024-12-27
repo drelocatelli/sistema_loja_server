@@ -107,6 +107,8 @@ const typeDefs = gql `
         serial: String!
         client: Client!
         colaborator: Colaborator!
+        produto: String!
+        description: String
         category: Category!
         total: Float!
     }
@@ -124,6 +126,17 @@ const typeDefs = gql `
         client_id: ID!
         category_id: ID!
         total: Float!
+    }
+
+    input SalesUpdateInput {
+        id: ID!, 
+        serial: String
+        produto: String
+        description: String
+        colaborator_id: ID!
+        client_id: ID!
+        category_id: ID!
+        total: Float
     }
 
     type Query {
@@ -158,7 +171,7 @@ const typeDefs = gql `
         deleteCategory(id: ID!): String
 
         createSale(input: SalesInput!): Sale
-        updateSale(id: ID!, serial: String, client: ID, colaborator: ID, category: ID, Value: Float): Sale
+        updateSale(input: SalesUpdateInput!): Sale
         deleteSale(id: ID!): String
     }
 `;
