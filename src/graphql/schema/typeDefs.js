@@ -109,7 +109,6 @@ const typeDefs = gql `
         colaborator: Colaborator!
         product: Product!
         description: String
-        category: Category!
         total: Float!
     }
 
