@@ -2,32 +2,21 @@ version: '3.7'
 services:
   node-app:
     container_name: raccoon-server
-    build: .
+    build:
+      context: .  # Isso vai usar o Dockerfile na pasta atual
     ports:
       - "4000:4000"
     environment:
-      DB_HOST: db
+      DB_HOST: ${DB_HOST}  # Nome do serviço do banco de dados
       DB_PORT: "${DB_PORT:-3306}"  # Define 3306 como valor padrão
       DB_USER: "${DB_USER}"
       DB_PASSWORD: "${DB_PASSWORD}"
       DB_NAME: "${DB_NAME}"
-    depends_on:
-      - db
     env_file:
-      - .env
-  db:
-    container_name: db
-    image: 'mysql/mysql-server:8.0'
-    restart: always
-    command: mysqld --default-authentication-plugin=mysql_native_password 
-    volumes:
-      - ./my.cnf:/etc/mysql/conf.d/my.cnf
-    environment:
-      MYSQL_DATABASE: "${DB_NAME}"
-      MYSQL_USER: "${DB_USER}"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
-    ports:
-      - "${DB_PORT:-3306}:3306"  # Define 3306 como valor padrão
+      - .env  # Variáveis de ambiente adicionais
+    networks:
+      - global-db-network  # Garantindo que ambos os containers estão na mesma rede
+
+networks:
+  global-db-network:
+    external: true
