@@ -112,15 +112,21 @@ module.exports = {
             return sale;
 
         }),
-        deleteSale: authMiddleware(async (_, {id}) => {
-            const sale = await Sale.findByPk(id);
+        deleteSales: authMiddleware(async (_, {ids}) => {
+            const sales = await Sale.findAll({
+                where: {
+                    id: {
+                        [Op.in]: ids
+                    }
+                }
+            });
 
-            await checkEntityExists(sale, 'Venda');
+            sales.forEach(async(sale) => {
+                sale.deleted_at = new Date();
+                await sale.save();
+            });
 
-            sale.deleted_at = new Date();
-            await sale.save();
-
-            return `Sale with ID ${id} deleted successfully.`;
+            return `Sales deleted successfully.`;
         })
     }
 };

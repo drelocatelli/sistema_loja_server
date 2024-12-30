@@ -207,7 +207,7 @@ const typeDefs = gql `
 
         createSale(input: SalesInput!): Sale
         updateSale(input: SalesUpdateInput!): Sale
-        deleteSale(id: ID!): String
+        deleteSales(ids: [ID!]): String
 
         createProduct(input: ProductInput!): Product
         updateProduct(input: ProductUpdateInput!): Product
