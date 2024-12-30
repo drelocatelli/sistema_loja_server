@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
 const Category = require('../../../models/Category')
 const Product = require('../../../models/Product');
