@@ -17,6 +17,7 @@ module.exports = {
                     {model: Category},
                 ]
             }
+            
             const condition = {};
 
             if(searchTerm && searchTerm.length != 0) {
