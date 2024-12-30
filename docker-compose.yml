@@ -19,7 +19,9 @@ services:
     container_name: db
     image: 'mysql/mysql-server:8.0'
     restart: always
-    command: mysqld --default-authentication-plugin=mysql_native_password --max_allowed_packet=1G
+    command: mysqld --default-authentication-plugin=mysql_native_password 
+    volumes:
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_DATABASE: "${DB_NAME}"
       MYSQL_USER: "${DB_USER}"
