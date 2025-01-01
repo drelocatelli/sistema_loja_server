@@ -19,7 +19,9 @@ module.exports = {
                 condition.name = {[Op.like] : `%${searchTerm}%`};
             }
 
-            if(!deleted) {
+            if(deleted) {
+                condition.deleted_at = {[Op.ne] : null};
+            } else {
                 condition.deleted_at = {[Op.eq] : null};
             }
 
