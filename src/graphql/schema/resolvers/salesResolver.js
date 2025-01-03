@@ -38,8 +38,20 @@ module.exports = {
 
             const totalPages = Math.ceil(count / pageSize);
 
+            let sales = Array.from(rows).map((sale) => {
+                sale['date'] = new Date(sale.created_at).toLocaleString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                
+                return sale;
+            });
+
             const data = {
-                sales: rows,
+                sales,
                 pagination: {
                     totalRecords: count,
                     totalPages: totalPages,
@@ -47,7 +59,7 @@ module.exports = {
                     pageSize: pageSize
                 }
             }
-            
+
             return data; 
         }),
         getSale: authMiddleware(async (_, {id}) => {

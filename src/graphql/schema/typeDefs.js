@@ -110,6 +110,10 @@ const typeDefs = gql `
         product: Product!
         description: String
         total: Float!
+        created_at: String
+        updated_at: String
+        deleted_at: String
+        date: String
     }
 
     type SalesResponse {
