@@ -3,7 +3,7 @@ const Client = require('../../../models/Client');
 const Colaborator = require('../../../models/Colaborator');
 const Sale = require('../../../models/Sale');
 const Product = require('../../../models/Product');
-const { Op } = require('sequelize');
+const { Op, Transaction } = require('sequelize');
 const { checkEntityExists } = require('../../../utils');
 
 module.exports = {
@@ -62,25 +62,62 @@ module.exports = {
     },
 
     Mutation: {
-        createSale: authMiddleware(async (_, {input}) => {
+        createSale: authMiddleware(async (_, { input }) => {
             const client = await Client.findByPk(input.client_id);
             const colaborator = await Colaborator.findByPk(input.colaborator_id);
-
+        
             await checkEntityExists(client, 'Cliente');
             await checkEntityExists(colaborator, 'Colaborador');
-
-            const saleRequest = await Sale.create(input);
-            const sale = await Sale.findByPk(saleRequest.id, {
-                include: [
-                    {model: Client},
-                    {model: Colaborator},
-                    {model: Product},
-
-                ]
-            });
-
-            return sale;
+        
+            const transaction = await Sale.sequelize.transaction();
+        
+            try {
+                console.log("Transaction started");
+        
+                // Create sale
+                const saleRequest = await Sale.create(input, { transaction });
+        
+                // Update stock
+                const product = await Product.findByPk(input.product_id, { transaction });
+        
+                if (!product) {
+                    throw new Error('Produto não encontrado');
+                }
+        
+                if (product.quantity < 1) {
+                    throw new Error('Estoque insuficiente');
+                }
+        
+                product.quantity -= 1;
+                await product.save({ transaction });
+        
+                // Fetch the created sale with associations
+                const sale = await Sale.findByPk(saleRequest.id, {
+                    include: [
+                        { model: Client },
+                        { model: Colaborator },
+                        { model: Product },
+                    ],
+                    transaction, // Ensure the transaction is used here
+                });
+        
+                if (!sale) {
+                    throw new Error('Erro ao criar a venda');
+                }
+        
+                // Commit the transaction only after successful operations
+                await transaction.commit();
+        
+                return sale;
+        
+            } catch (err) {
+                if (transaction && !transaction.finished) {
+                    await transaction.rollback();
+                }
+                throw err;
+            }
         }),
+        
 
         updateSale: authMiddleware(async (_, {input}) => {
             const client = await Client.findByPk(input.client_id);
