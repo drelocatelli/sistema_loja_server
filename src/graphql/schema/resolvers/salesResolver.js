@@ -84,12 +84,13 @@ module.exports = {
                     throw new Error('Produto não encontrado');
                 }
         
-                if (product.quantity < 1) {
+                if (product.quantity <= 0) {
                     throw new Error('Estoque insuficiente');
+                } else {
+                    product.quantity -= 1;
+                    await product.save({ transaction });
                 }
         
-                product.quantity -= 1;
-                await product.save({ transaction });
         
                 // Fetch the created sale with associations
                 const sale = await Sale.findByPk(saleRequest.id, {
