@@ -99,7 +99,7 @@ module.exports = {
                 if (product.quantity <= 0) {
                     throw new Error('Estoque insuficiente');
                 } else {
-                    product.quantity -= 1;
+                    product.quantity -= input.total;
                     await product.save({ transaction });
                 }
         
