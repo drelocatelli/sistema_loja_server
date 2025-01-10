@@ -1,0 +1,13 @@
+POST http://localhost:4000/upload
+Content-Type: multipart/form-data; boundary=----Boundary123
+
+------Boundary123
+Content-Disposition: form-data; name="path"
+
+imgs/products
+------Boundary123
+Content-Disposition: form-data; name="file"; filename="3773.jpg"
+Content-Type: image/jpeg
+
+< /home/andressa/Pictures/3773.jpg
+------Boundary123--

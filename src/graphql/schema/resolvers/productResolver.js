@@ -2,7 +2,8 @@ const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
 const Category = require('../../../models/Category')
 const Product = require('../../../models/Product');
-const { checkEntityExists } = require("../../../utils");
+const { checkEntityExists, findImageByName, findRootPath } = require("../../../utils");
+const path = require('path');
 
 module.exports = {
     Query: {
@@ -30,9 +31,15 @@ module.exports = {
 
             props.where = condition;
 
-            const {count, rows} = await Product.findAndCountAll(props);
+            let {count, rows} = await Product.findAndCountAll(props);
 
             const totalPages = Math.ceil(count / pageSize);
+
+            const pathImg = '/static/products';
+            rows = rows.map((product) => { 
+                product['photos'] = [pathImg + '/' + product.id ]
+                return product; 
+            })
 
             const data = {
                 products: rows,

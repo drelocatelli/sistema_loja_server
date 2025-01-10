@@ -2,10 +2,11 @@ const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./src/graphql/schema/typeDefs');
 const resolvers = require('./src/graphql/schema/resolvers');
 const sequelize = require('./db');
+const uploadController = require('./controllers/uploadController');
 const express = require('express');
+const path = require('path');
 
 const app = express();
-
 const server = new ApolloServer({ 
   typeDefs, 
   resolvers,
@@ -16,7 +17,11 @@ const server = new ApolloServer({
   }
  });
 
- 
+ app.use(express.static(path.resolve('public')));
+
+ // routes
+ app.use(uploadController);
+
 async function startServer() {
   await server.start();
   server.applyMiddleware({app, path: '/'});
