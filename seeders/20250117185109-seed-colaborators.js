@@ -17,14 +17,14 @@ module.exports = {
     faker.locale = 'pt_BR';
 
     const collaborators = Array.from({ length: 100 }).map(() => ({
-      name: faker.name.findName(),
+      name: faker.name.firstName(),
       email: faker.internet.email(),
       role: 'Colaborador',
-      rg: faker.random.alphaNumeric(10).toUpperCase(),
-      cpf: faker.finance.account(11), // Generate fake CPF
+      rg: faker.number.int({ min: 50, max: 100 }).toString(),
+      cpf: faker.number.int({ min: 50, max: 100 }).toString(),
       date_of_birth: faker.date.past(30, '1990-01-01'),
-      marital_status: faker.random.arrayElement(['Solteiro', 'Casado', 'Divorciado']),
-      gender: faker.random.arrayElement(['Masculino', 'Feminino']),
+      marital_status: 'Solteiro',
+      gender: 'Masculino',
       full_address: faker.address.streetAddress() + ', ' + faker.address.city() + ', ' + faker.address.state(),
       created_at: new Date(),
       updated_at: new Date()

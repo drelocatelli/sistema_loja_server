@@ -1,4 +1,5 @@
 const {faker} = require('@faker-js/faker');
+const Category = require('../src/models/Category.js');
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
@@ -30,7 +31,7 @@ module.exports = {
         description: faker.commerce.productDescription(),
         category_id: randomCategoryId,
         price: parseFloat(faker.commerce.price()),
-        quantity: faker.datatype.number({ min: 1, max: 100 }),
+        quantity: faker.number.int(100) ,
         is_published: faker.datatype.boolean(),
         created_at: new Date(),
         updated_at: new Date()
