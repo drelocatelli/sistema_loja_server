@@ -36,7 +36,7 @@ module.exports = {
             const totalPages = Math.ceil(count / pageSize);
 
             rows = rows.map(async (product) => { 
-                product['photos'] = await getImagesFromFolder(product.id);
+                product['photos'] = await getImagesFromFolder(product.id, 'products');
                 return product; 
             })
 

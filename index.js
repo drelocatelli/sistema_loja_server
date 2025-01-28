@@ -7,6 +7,7 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
+
 const server = new ApolloServer({ 
   typeDefs, 
   resolvers,
@@ -24,12 +25,12 @@ const server = new ApolloServer({
 
 async function startServer() {
   await server.start();
-  server.applyMiddleware({app, path: '/'});
+  server.applyMiddleware({app, path: '/graphql'});
   sequelize.sync().then(() => {
       console.log('Database synced successfully');
     });
     
-  app.listen(4000, () =>
+  app.listen(process.env.PORT, () =>
     console.log(`Servidor GraphQL rodando em http://localhost:4000${server.graphqlPath}`)
   );
 }

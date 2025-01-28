@@ -48,27 +48,29 @@ const checkEntityExists = async (entity, entityName) => {
     return dir;
   };
   
-const getImagesFromFolder = async (itemId) => {
-  const dirPath = path.join(findRootPath(), 'public', 'uploads', 'imgs', 'products', itemId.toString());
+const getImagesFromFolder = async (itemId, folder) => {
+  const dirPath = path.join(findRootPath(), 'public', 'uploads', 'imgs', folder, itemId.toString());
 
   if(!fs.existsSync(dirPath)) {
     return [];
   }
 
   // read the dir
-  const imagesUrls = await fs.promises.readdir(dirPath, async (err, files) => {
-
-    if (err) {
-      console.log(err)
-      return [];
-    }
-
-    return files;
-    
-  });
-
-  return imagesUrls ?? [];
+  return new Promise((resolve, reject) => {
+    fs.readdir(dirPath, async (err, files) => {
+      
+      if (err) {
+        console.log(err)
+        resolve([]);
+      }
   
+      const filesUrls = files.map(file => `uploads/imgs/${folder}/${itemId}/${file}`);
+  
+      resolve(filesUrls ?? []);
+      
+    });
+    
+  })
 }
 
 module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder };
