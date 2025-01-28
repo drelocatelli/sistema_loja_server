@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
 const Category = require('../../../models/Category')
 const Product = require('../../../models/Product');
-const { checkEntityExists, findImageByName, findRootPath } = require("../../../utils");
+const { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder } = require("../../../utils");
 const path = require('path');
 
 module.exports = {
@@ -35,9 +35,8 @@ module.exports = {
 
             const totalPages = Math.ceil(count / pageSize);
 
-            const pathImg = '/static/products';
-            rows = rows.map((product) => { 
-                product['photos'] = [pathImg + '/' + product.id ]
+            rows = rows.map(async (product) => { 
+                product['photos'] = await getImagesFromFolder(product.id);
                 return product; 
             })
 

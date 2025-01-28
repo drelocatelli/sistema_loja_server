@@ -4,9 +4,10 @@ Content-Type: multipart/form-data; boundary=----Boundary123
 ------Boundary123
 Content-Disposition: form-data; name="path"
 
-imgs/products
+# path
+imgs/products/201
 ------Boundary123
-Content-Disposition: form-data; name="file"; filename="3773.jpg"
+Content-Disposition: form-data; name="file"; filename="3778.jpg"
 Content-Type: image/jpeg
 
 < /home/andressa/Pictures/3773.jpg
