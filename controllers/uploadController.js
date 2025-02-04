@@ -24,17 +24,15 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post('/upload', (req, res) => {
-  upload.single('file')(req, res, (err) => { // O campo deve ser 'file'
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
+router.post('/upload', upload.single('file'), (req, res) => {
+  if(!req.file) {
+    return res.status(400).json({message: 'Não foi possível enviar mensagem'});
+  }
 
-    res.status(200).json({
-      message: 'Arquivo enviado com sucesso!',
-      file: req.file, // Detalhes do arquivo enviado
-      body: req.body, // Outros campos enviados no formulário
-    });
+  res.status(200).json({
+    message: 'Arquivo enviado com sucesso!',
+    file: req.file, // Detalhes do arquivo enviado
+    body: req.body, // Outros campos enviados no formulário
   });
 });
 
@@ -45,9 +43,11 @@ router.get('/static/products/:filename', async (req, res) => {
     if (!filename) {
       return res.status(400).send('Filename is required');
     }
-  
+
+    
     // Define the full path to the file
     const ptfile = await findImageByName(filename, path.join(__dirname, '..', 'public', 'uploads', 'imgs', 'products'))
+    console.log({ptfile})
     const filePath = ptfile;
   
     // Send the file
