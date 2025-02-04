@@ -15,6 +15,7 @@ const authMiddleware = (resolve) => (parent, args, context, info) => {
       throw new Error('Token inválido');
     }
   };
-  
+
+ 
 
 module.exports = authMiddleware;
