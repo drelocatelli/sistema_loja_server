@@ -7,7 +7,7 @@ const path = require('path');
 
 module.exports = {
     Query: {
-        getProducts: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
+        getProducts: (async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
             const offset = (page - 1) * pageSize;
 
             const props = {
@@ -52,7 +52,7 @@ module.exports = {
             
             return data; 
         }),
-        getProduct: authMiddleware(async (_, {id}) => {
+        getProduct: (async (_, {id}) => {
             return await Product.findByPk(id, {
                 include: [
                     {model: Category},
