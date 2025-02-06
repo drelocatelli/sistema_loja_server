@@ -37,6 +37,7 @@ jobs:
           cd ~/containers/node/raccoontech
           git pull origin main
           yarn install
+          yarn
           npx sequelize-cli db:migrate
           docker compose up -d --build
         EOF
