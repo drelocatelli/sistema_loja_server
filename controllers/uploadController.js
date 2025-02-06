@@ -4,10 +4,13 @@ const path = require('path');
 const fs = require('fs');
 const { findImageByName } = require('../src/utils');
 const authMiddlewareExpress = require('../src/middlewares/loginExpressMiddleware');
+const cors = require('cors');
 
 const uploadEndpoint = './public/uploads';
 
-const router = express.Router();
+// const router = express.Router();
+const router = express();
+router.use(cors())
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -26,9 +29,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post('/upload', authMiddlewareExpress, upload.single('file'), (req, res) => {
+  console.log('enviando arquivo...')
   if(!req.file) {
     return res.status(400).json({message: 'Não foi possível enviar mensagem'});
   }
+
 
   res.status(200).json({
     message: 'Arquivo enviado com sucesso!',
