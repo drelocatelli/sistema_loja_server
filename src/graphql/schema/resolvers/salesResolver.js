@@ -4,7 +4,7 @@ const Colaborator = require('../../../models/Colaborator');
 const Sale = require('../../../models/Sale');
 const Product = require('../../../models/Product');
 const { Op, Transaction } = require('sequelize');
-const { checkEntityExists } = require('../../../utils');
+const { checkEntityExists,getImagesFromFolder } = require('../../../utils');
 
 module.exports = {
     Query: {
@@ -34,7 +34,15 @@ module.exports = {
 
             props.where = condition;
 
-            const {count, rows} = await Sale.findAndCountAll(props);
+            
+            let {count, rows} = await Sale.findAndCountAll(props);
+            
+            rows = await Promise.all(
+                rows.map(async (sale) => { 
+                    sale.product['photos'] = await getImagesFromFolder(sale.product.id, 'products');
+                    return sale; 
+                })
+            );
 
             const totalPages = Math.ceil(count / pageSize);
 
