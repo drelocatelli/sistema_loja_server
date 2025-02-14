@@ -5,6 +5,7 @@ const Sale = require('../../../models/Sale');
 const Product = require('../../../models/Product');
 const { Op, Transaction } = require('sequelize');
 const { checkEntityExists,getImagesFromFolder } = require('../../../utils');
+const Category = require('../../../models/Category');
 
 module.exports = {
     Query: {
@@ -18,7 +19,12 @@ module.exports = {
                 include: [
                     {model: Client},
                     {model: Colaborator},
-                    {model: Product},
+                    {
+                        model: Product,
+                        include: [
+                            {model: Category},
+                        ]
+                    },
                 ]
             }
 
