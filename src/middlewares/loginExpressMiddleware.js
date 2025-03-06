@@ -19,7 +19,7 @@ const authMiddlewareExpress = (req, res, next) => {
     next(); // Passa para o próximo middleware
   } catch (err) {
     console.error('Erro ao verificar token:', err.message);
-    return res.status(403).json({ message: 'Token inválido' });
+    return res.status(403).json({ message: 'Sessão expirada. Faça login novamente.' });
   }
 };
 

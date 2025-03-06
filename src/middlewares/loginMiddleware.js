@@ -12,7 +12,7 @@ const authMiddleware = (resolve) => (parent, args, context, info) => {
       context.user = decoded; // Armazena o usuário no contexto para uso posterior
       return resolve(parent, args, context, info); // Prossegue com a execução da operação
     } catch (err) {
-      throw new Error('Token inválido');
+      throw new Error('Sessão expirada. Faça login novamente.');
     }
   };
 
