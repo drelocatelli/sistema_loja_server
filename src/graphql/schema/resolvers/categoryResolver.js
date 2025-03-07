@@ -12,14 +12,16 @@ module.exports = {
             return await Category.findAll();
             
         }),
-        getCategories: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
-            const offset = (page - 1) * pageSize;
-
+        getCategories: authMiddleware(async (_, {page = 1, pageSize = null, searchTerm = null, deleted = false}) => {
             const props = {
                 order: [['name', 'ASC']],
-                limit: pageSize,
-                offset,
             };
+
+            if(pageSize != null) {
+                const offset = (page - 1) * pageSize;
+                props.offset = offset;
+                props.limit = pageSize;
+            }
 
             const condition = {};
 
@@ -35,7 +37,8 @@ module.exports = {
             
             const {count, rows} = await Category.findAndCountAll(props);
 
-            const totalPages = Math.ceil(count / pageSize);
+            const totalPages = pageSize != null ? Math.ceil(count / pageSize) : 1;
+            pageSize = pageSize != null ? pageSize : 1;
 
             const data = {
                 categories: rows,
@@ -46,7 +49,7 @@ module.exports = {
                     pageSize: pageSize
                 }
             }
-            
+
             return data;
         }),
         getCategory: authMiddleware(async (_, {id}) => {
