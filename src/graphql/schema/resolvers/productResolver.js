@@ -2,8 +2,7 @@ const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
 const Category = require('../../../models/Category')
 const Product = require('../../../models/Product');
-const { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder } = require("../../../utils");
-const path = require('path');
+const { checkEntityExists, getImagesFromFolder } = require("../../../utils");
 
 module.exports = {
     Query: {
