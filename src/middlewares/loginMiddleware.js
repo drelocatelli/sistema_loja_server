@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const authMiddleware = (resolve) => (parent, args, context, info) => {
     const token = context.req.headers.authorization?.split(' ')[1]; 
-  
+
     if (!token) {
       throw new Error('Token necessário');
     }
@@ -15,7 +15,5 @@ const authMiddleware = (resolve) => (parent, args, context, info) => {
       throw new Error('Sessão expirada. Faça login novamente.');
     }
   };
-
- 
 
 module.exports = authMiddleware;

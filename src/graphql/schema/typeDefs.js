@@ -5,7 +5,6 @@ const typeDefs = gql `
         id: ID!
         name: String!
         email: String!
-        role: String!
         rg: String!
         date_of_birth: String!
         marital_status: String!
@@ -24,7 +23,6 @@ const typeDefs = gql `
     input ColaboratorInput {
         name: String!
         email: String!
-        role: String!
         rg: String!
         cpf: String
         date_of_birth: String!
@@ -40,7 +38,6 @@ const typeDefs = gql `
         id: ID!
         name: String
         email: String
-        role: String
         rg: String
         cpf: String
         date_of_birth: String
@@ -84,6 +81,9 @@ const typeDefs = gql `
     type Login {
         id: ID!
         password: String!
+        role: String!
+        colaborator_id: ID
+        user: String!
     }
 
     type LoginResponse {
@@ -207,7 +207,7 @@ const typeDefs = gql `
         deleteClient(id: ID!): Client
         deleteClients(ids: [ID!]): [Client]
 
-        login(password: String!): LoginResponse
+        login(user: String!, password: String!): LoginResponse
 
         createCategory(name: String!): Category
         updateCategory(id: ID!, name: String): Category

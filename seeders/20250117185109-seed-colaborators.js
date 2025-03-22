@@ -16,10 +16,9 @@ module.exports = {
 
     faker.locale = 'pt_BR';
 
-    const collaborators = Array.from({ length: 100 }).map(() => ({
+    const colaborators = Array.from({ length: 100 }).map(() => ({
       name: faker.name.firstName(),
       email: faker.internet.email(),
-      role: 'Colaborador',
       rg: faker.number.int({ min: 50, max: 100 }).toString(),
       cpf: faker.number.int({ min: 50, max: 100 }).toString(),
       date_of_birth: faker.date.past(30, '1990-01-01'),
@@ -30,7 +29,7 @@ module.exports = {
       updated_at: new Date()
     }));
 
-    await queryInterface.bulkInsert('colaborators', collaborators, {});
+    await queryInterface.bulkInsert('colaborators', colaborators, {});
 
   },
 

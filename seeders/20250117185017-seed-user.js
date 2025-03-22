@@ -16,6 +16,9 @@ module.exports = {
 
     await queryInterface.bulkInsert('login', [{
       password: await bcrypt.hash('admin', 10),
+      user: 'admin',
+      role: 'admin',
+      colaborator_id: null
     }])
   },
 

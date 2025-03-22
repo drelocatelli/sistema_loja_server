@@ -57,15 +57,13 @@ module.exports = {
 
         updateColaborator: authMiddleware(async (_, {input}) => {
             const colaborator = await Colaborator.findByPk(input.id);
-            // const collaborator = collaborators.find((collaborator) => collaborator.id === id);
 
             if(!colaborator) {
-                throw new Error('Collaborator not found!');
+                throw new Error('Colaborator not found!');
             }
 
             colaborator.name = input.name || colaborator.name;
             colaborator.email = input.email || colaborator.email;
-            colaborator.role = input.role || colaborator.role;
             colaborator.rg = input.rg || colaborator.rg;
 
             await colaborator.save();
@@ -77,12 +75,12 @@ module.exports = {
             const colaborator = await Colaborator.findByPk(id);
 
             if(!colaborator) {
-                throw new Error('Collaborator not found!');
+                throw new Error('Colaborator not found!');
             }
 
             colaborator.deleted_at = new Date();
             await colaborator.save();
-            return `Collaborator with ID ${id} deleted successfully.`;
+            return `Colaborator with ID ${id} deleted successfully.`;
         })
     }
 }

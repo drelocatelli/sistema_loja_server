@@ -1,16 +1,18 @@
-const {DataTypes} = require('sequelize');
+const {DataTypes, Sequelize} = require('sequelize');
 const sequelize = require('../../db.js');
 
 const Colaborator = sequelize.define('colaborator', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    role: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -41,7 +43,7 @@ const Colaborator = sequelize.define('colaborator', {
     deleted_at: {
         type: DataTypes.DATE,
         allowNull: true
-    }
+    },
 },
 {
     timestamps: true,
@@ -49,5 +51,6 @@ const Colaborator = sequelize.define('colaborator', {
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
 });
+
 
 module.exports = Colaborator;

@@ -1,16 +1,8 @@
 'use strict';
 
-const bcrypt = require('bcrypt');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
     await queryInterface.createTable('login', {
       id: {
         allowNull: false,
@@ -18,25 +10,33 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       password: {
-        type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      role: {
+        allowNull: false,
+        type: Sequelize.ENUM('colaborator', 'manager', 'admin'),
+        defaultValue: 'colaborator'
+      },
+      colaborator_id: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'colaborators',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
       }
     });
-
-    const pass = await bcrypt.hash('admin', 10);
-    await queryInterface.bulkInsert('login', [{
-      password: pass,
-    }], {});
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+
     await queryInterface.dropTable('login');
   }
 };
