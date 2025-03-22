@@ -6,6 +6,8 @@ services:
       context: .  # Isso vai usar o Dockerfile na pasta atual
     ports:
       - "4000:4000"
+    volumes:
+      - ./public:/app/public
     environment:
       DB_HOST: ${DB_HOST}  # Nome do serviço do banco de dados
       DB_PORT: "${DB_PORT:-3306}"  # Define 3306 como valor padrão
