@@ -24,9 +24,11 @@ module.exports = {
                 condition.name = {[Op.like] : `%${searchTerm}%`};
             }
 
-            if(!deleted) {
-                condition.deleted_at = {[Op.eq] : null};
+            if(deleted) {
+                condition.deleted_at = {[Op.ne] : null};
             }
+
+            console.log(condition)
 
             props.where = condition;
 
