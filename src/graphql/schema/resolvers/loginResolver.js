@@ -23,7 +23,18 @@ module.exports = {
                 expiresIn: '2h'
             });
             
-            return {error: false,  message: 'Logado com sucesso!', token};
+            return {error: false,  message: 'Logado com sucesso!', token, details: login};
+        },
+        assignColaboratorToUser: async(_, {userId, colaboratorId}) => {
+            const login =  await Login.update({colaborator_id: colaboratorId}, {where: {id: userId}});
+
+            if(!login) {
+                return {error: true, message: 'Login não existe!'};
+            }
+
+            const user = await Login.findByPk(userId);
+
+            return user;
         }
     },
 }

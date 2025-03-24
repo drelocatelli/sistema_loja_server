@@ -90,6 +90,7 @@ const typeDefs = gql `
         error: Boolean!
         message: String!
         token: String
+        details: Login
     }
 
     type Category {
@@ -208,6 +209,7 @@ const typeDefs = gql `
         deleteClients(ids: [ID!]): [Client]
 
         login(user: String!, password: String!): LoginResponse
+        assignColaboratorToUser(userId: ID!, colaboratorId: ID!): Login
 
         createCategory(name: String!): Category
         updateCategory(id: ID!, name: String): Category
