@@ -1,11 +1,21 @@
 const Login = require('../../../models/Login');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Colaborator = require('../../../models/Colaborator');
 
 module.exports = {
     Mutation: {
         login: async (_, {user, password}) => {
-            const login = await Login.findOne({where: {user}});
+            const login = await Login.findOne(
+                {
+                    where: {user},
+                    include: [
+                        {
+                            model: Colaborator,
+                        }
+                    ]
+                },
+            );
 
             if(!login) {
                 return {error: true, message: 'Login não existe!'};
@@ -22,6 +32,7 @@ module.exports = {
             }, process.env.JWT_SECRET_KEY, {
                 expiresIn: '2h'
             });
+            
             
             return {error: false,  message: 'Logado com sucesso!', token, details: login};
         },

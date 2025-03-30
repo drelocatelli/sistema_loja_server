@@ -28,8 +28,6 @@ module.exports = {
                 condition.deleted_at = {[Op.ne] : null};
             }
 
-            console.log(condition)
-
             props.where = condition;
 
             let {count, rows} = await Product.findAndCountAll(props);

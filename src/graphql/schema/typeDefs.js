@@ -84,6 +84,7 @@ const typeDefs = gql `
         role: String!
         colaborator_id: ID
         user: String!
+        colaborator: Colaborator
     }
 
     type LoginResponse {
