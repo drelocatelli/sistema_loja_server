@@ -8,6 +8,7 @@ const dev = {
   // host: '127.0.0.1',
   host: process.env.DB_HOST,
   dialect: process.env.DB_DIALECT,
+  // port: '3306'
   port: process.env.DB_PORT
 }
 
