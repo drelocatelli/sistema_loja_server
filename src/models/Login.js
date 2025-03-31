@@ -22,6 +22,11 @@ const Login = sequelize.define('login', {
         type: DataTypes.INTEGER,
         unique: true,
         allowNull: true,
+        references: {
+            model: 'colaborator',
+            key: 'id'
+        },
+        onDelete: 'SET NULL'
     },
     role: {
         type: DataTypes.ENUM('colaborator', 'manager', 'admin'),
@@ -34,5 +39,6 @@ const Login = sequelize.define('login', {
 });
 
 Login.belongsTo(Colaborator, { foreignKey: 'colaborator_id' });
+Colaborator.hasOne(Login, { foreignKey: 'colaborator_id' });
 
 module.exports = Login;

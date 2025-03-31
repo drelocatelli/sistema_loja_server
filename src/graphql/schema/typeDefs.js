@@ -10,6 +10,7 @@ const typeDefs = gql `
         marital_status: String!
         gender: String!
         full_address: String!
+        login: Login
         created_at: String
         updated_at: String
         deleted_at: String
@@ -182,7 +183,7 @@ const typeDefs = gql `
 
 
     type Query {
-        getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ColaboratorResponse
+        getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
 
         getClients(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ClientsResponse

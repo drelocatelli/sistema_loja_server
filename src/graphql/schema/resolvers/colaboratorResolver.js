@@ -1,16 +1,24 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
 const Colaborator = require('../../../models/Colaborator');
+const Login = require('../../../models/Login');
 const { Op } = require('sequelize');
 
 module.exports = {
     Query: {
-        getColaborators: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false}) => {
+        getColaborators: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, isAssigned = true}) => {
+
             const offset = (page - 1) * pageSize;
 
             const props = {
                 order: [['name', 'ASC']],
                 limit: pageSize,
                 offset,
+                include: [
+                    {
+                        model: Login,
+                        required: isAssigned,
+                    }
+                ]
             }
 
             const condition = {};
@@ -18,7 +26,7 @@ module.exports = {
             if(searchTerm && searchTerm.length != 0) {
                 condition.name = {[Op.like] : `%${searchTerm}%`};
             }
-
+            
             if(deleted) {
                 condition.deleted_at = {[Op.ne] : null};
             } else {
