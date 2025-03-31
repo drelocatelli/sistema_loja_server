@@ -5,7 +5,7 @@ const { Op } = require('sequelize');
 
 module.exports = {
     Query: {
-        getColaborators: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, isAssigned = true}) => {
+        getColaborators: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, isAssigned = null}) => {
 
             const offset = (page - 1) * pageSize;
 
@@ -16,11 +16,11 @@ module.exports = {
                 include: [
                     {
                         model: Login,
-                        required: isAssigned,
+                        required: false
                     }
                 ]
             }
-
+            
             const condition = {};
 
             if(searchTerm && searchTerm.length != 0) {
@@ -31,6 +31,12 @@ module.exports = {
                 condition.deleted_at = {[Op.ne] : null};
             } else {
                 condition.deleted_at = {[Op.eq] : null};
+            }
+
+            if (isAssigned === true) {
+                condition['$login.colaborator_id$'] = { [Op.ne]: null }; // Apenas colaboradores COM login
+            } else if (isAssigned === false) {
+                condition['$login.colaborator_id$'] = { [Op.is]: null }; // Apenas colaboradores SEM login
             }
 
             props.where = condition;

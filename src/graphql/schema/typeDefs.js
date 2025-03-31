@@ -183,7 +183,7 @@ const typeDefs = gql `
 
 
     type Query {
-        getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean): ColaboratorResponse
+        getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
 
         getClients(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean): ClientsResponse
