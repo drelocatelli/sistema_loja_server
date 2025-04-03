@@ -8,7 +8,11 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*', // Altere para o domínio permitido, se necessário
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 const server = new ApolloServer({ 
   typeDefs, 
