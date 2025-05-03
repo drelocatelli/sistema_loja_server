@@ -3,3 +3,4 @@ yarn.lock
 .env
 public/uploads/imgs/products/*
 .qodo
+.env copy
