@@ -196,7 +196,7 @@ const typeDefs = gql `
         getAllCategories(deleted: Boolean): [Category]
         getCategory(id: ID!): Category
 
-        getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, order: String): ProductsResponse
+        getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, orderBy: String, orderType: String): ProductsResponse
         getProduct(id: ID!): Product
     }
 

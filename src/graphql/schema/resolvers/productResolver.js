@@ -6,11 +6,11 @@ const { checkEntityExists, getImagesFromFolder } = require("../../../utils");
 
 module.exports = {
     Query: {
-        getProducts: (async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, order = ['created_at', 'ASC']}) => {
+        getProducts: (async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC'}) => {
             const offset = (page - 1) * pageSize;
 
             const props = {
-                order: [order],
+                order: [[orderBy, orderType]],
                 limit: pageSize,
                 offset,
                 include: [
