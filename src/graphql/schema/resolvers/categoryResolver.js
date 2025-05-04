@@ -4,14 +4,14 @@ const { Op } = require('sequelize');
 
 module.exports = {
     Query: {
-        getAllCategories: authMiddleware(async (_, deleted = false) => {
+        getAllCategories: async (_, deleted = false) => {
             if(!deleted) {
                 return await Category.findAll({where: {deleted_at: null}});
             }
 
             return await Category.findAll();
-            
-        }),
+          
+        },
         getCategories: authMiddleware(async (_, {page = 1, pageSize = null, searchTerm = null, deleted = false}) => {
             const props = {
                 order: [['name', 'ASC']],
