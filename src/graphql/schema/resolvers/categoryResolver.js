@@ -12,7 +12,7 @@ module.exports = {
             return await Category.findAll();
           
         },
-        getCategories: authMiddleware(async (_, {page = 1, pageSize = null, searchTerm = null, deleted = false}) => {
+        getCategories: async (_, {page = 1, pageSize = null, searchTerm = null, deleted = false}) => {
             const props = {
                 order: [['name', 'ASC']],
             };
@@ -51,10 +51,10 @@ module.exports = {
             }
 
             return data;
-        }),
-        getCategory: authMiddleware(async (_, {id}) => {
+        },
+        getCategory: async (_, {id}) => {
             return await Category.findByPk(id);
-        })
+        }
     },
 
     Mutation: {
