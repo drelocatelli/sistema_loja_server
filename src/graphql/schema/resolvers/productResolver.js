@@ -6,7 +6,7 @@ const { checkEntityExists, getImagesFromFolder } = require("../../../utils");
 
 module.exports = {
     Query: {
-        getProducts: (async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC'}) => {
+        getProducts: (async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) => {
             const offset = (page - 1) * pageSize;
 
             const props = {
@@ -26,6 +26,10 @@ module.exports = {
 
             if(deleted) {
                 condition.deleted_at = {[Op.ne] : null};
+            }
+
+            if(onlyPublished) {
+                condition.is_published = {[Op.eq] : 1};
             }
 
             props.where = condition;
