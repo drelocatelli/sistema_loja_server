@@ -4,57 +4,66 @@ const Category = require('../../../models/Category')
 const Product = require('../../../models/Product');
 const { checkEntityExists, getImagesFromFolder } = require("../../../utils");
 
+async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) {
+    const offset = (page - 1) * pageSize;
+
+    const props = {
+        order: [[orderBy, orderType]],
+        limit: pageSize,
+        offset,
+        include: [
+            {model: Category},
+        ]
+    }
+    
+    const condition = {};
+
+    if(searchTerm && searchTerm.length != 0) {
+        condition.name = {[Op.like] : `%${searchTerm}%`};
+    }
+
+    if(deleted) {
+        condition.deleted_at = {[Op.ne] : null};
+    }
+
+    if(onlyPublished) {
+        condition.is_published = {[Op.eq] : 1};
+    }
+
+    props.where = condition;
+
+    let {count, rows} = await Product.findAndCountAll(props);
+
+    const totalPages = Math.ceil(count / pageSize);
+
+    rows = rows.map(async (product) => { 
+        product['photos'] = await getImagesFromFolder(product.id, 'products');
+        return product; 
+    })
+
+    const data = {
+        products: rows,
+        pagination: {
+            totalRecords: count,
+            totalPages: totalPages,
+            currentPage: page,
+            pageSize: pageSize
+        }
+    }
+    
+    return data; 
+}
+
 module.exports = {
     Query: {
-        getProducts: (async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) => {
-            const offset = (page - 1) * pageSize;
-
-            const props = {
-                order: [[orderBy, orderType]],
-                limit: pageSize,
-                offset,
-                include: [
-                    {model: Category},
-                ]
-            }
-            
-            const condition = {};
-
-            if(searchTerm && searchTerm.length != 0) {
-                condition.name = {[Op.like] : `%${searchTerm}%`};
-            }
-
-            if(deleted) {
-                condition.deleted_at = {[Op.ne] : null};
-            }
-
-            if(onlyPublished) {
-                condition.is_published = {[Op.eq] : 1};
-            }
-
-            props.where = condition;
-
-            let {count, rows} = await Product.findAndCountAll(props);
-
-            const totalPages = Math.ceil(count / pageSize);
-
-            rows = rows.map(async (product) => { 
-                product['photos'] = await getImagesFromFolder(product.id, 'products');
-                return product; 
-            })
-
-            const data = {
-                products: rows,
-                pagination: {
-                    totalRecords: count,
-                    totalPages: totalPages,
-                    currentPage: page,
-                    pageSize: pageSize
-                }
-            }
-            
+        getProducts: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) => {
+            const data = await getProducts(_, {page, pageSize, searchTerm, deleted, orderBy, orderType, onlyPublished});
             return data; 
         }),
+        getPublicProducts: async (_, {page = 1, pageSize = 7, searchTerm = null, orderBy = 'created_at', orderType = 'ASC'}) => {
+            const data = await getProducts(_, {page, pageSize, searchTerm, orderBy, deleted: false, orderType, onlyPublished: true});
+            return data;
+        },
         getProduct: (async (_, {id}) => {
             return await Product.findByPk(id, {
                 include: [

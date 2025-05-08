@@ -197,6 +197,7 @@ const typeDefs = gql `
         getCategory(id: ID!): Category
 
         getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, orderBy: String, orderType: String, onlyPublished: Boolean): ProductsResponse
+        getPublicProducts(page: Int, pageSize: Int, searchTerm: String, orderBy: String, orderType: String): ProductsResponse
         getProduct(id: ID!): Product
     }
 
