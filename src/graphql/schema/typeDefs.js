@@ -171,6 +171,19 @@ const typeDefs = gql `
         is_published: Boolean!
     }
 
+    input ClientInput {
+        name: String!
+        email: String!
+        rg: String
+        cpf: String
+        phone: String
+        address: String
+        cep: String
+        city: String
+        state: String
+        country: String
+    }
+
     input ProductUpdateInput {
         id: ID!
         name: String
@@ -181,6 +194,11 @@ const typeDefs = gql `
         is_published: Boolean
     }
 
+    input CustomerInput {
+        password: String!
+        confirmPassword: String!
+        client: ClientInput
+    }
 
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
@@ -225,6 +243,8 @@ const typeDefs = gql `
         createProduct(input: ProductInput!): Product
         updateProduct(input: ProductUpdateInput!): Product
         deleteProduct(id: ID!): String
+
+        createCustomer(input: CustomerInput!): Client
     }
 `;
 

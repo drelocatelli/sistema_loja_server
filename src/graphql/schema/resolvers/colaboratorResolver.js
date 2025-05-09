@@ -73,7 +73,7 @@ module.exports = {
             const colaborator = await Colaborator.findByPk(input.id);
 
             if(!colaborator) {
-                throw new Error('Colaborator not found!');
+                throw new Error('Colaborator não encontrado!');
             }
 
             colaborator.name = input.name || colaborator.name;
@@ -89,7 +89,7 @@ module.exports = {
             const colaborator = await Colaborator.findByPk(id);
 
             if(!colaborator) {
-                throw new Error('Colaborator not found!');
+                throw new Error('Colaborator não encontrado!');
             }
 
             colaborator.deleted_at = new Date();

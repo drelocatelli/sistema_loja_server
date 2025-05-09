@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../../db.js");
+const Customer = require('./Customer.js');
 
 const Client = sequelize.define('clients', {
     id: {
@@ -57,6 +58,11 @@ const Client = sequelize.define('clients', {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
+});
+
+Client.hasOne(Customer, {
+    foreignKey: 'clientId',
+    as: 'customers'
 });
 
 module.exports = Client;
