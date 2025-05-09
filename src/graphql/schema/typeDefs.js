@@ -62,6 +62,7 @@ const typeDefs = gql `
         city: String
         state: String
         country: String
+        customer: Customer
         created_at: String
         updated_at: String
         deleted_at: String
@@ -162,6 +163,15 @@ const typeDefs = gql `
         pagination: PaginationInfo
     }
 
+    type Customer {
+        id: ID!
+        client: Client
+    }
+
+    type CustomerLogin {
+        token: String!
+    }
+
     input ProductInput {
         name: String!
         description: String
@@ -200,6 +210,24 @@ const typeDefs = gql `
         client: ClientInput
     }
 
+    input UpdateClientInput {
+        name: String
+        rg: String
+        cpf: String
+        phone: String
+        address: String
+        cep: String
+        city: String
+        state: String
+        country: String
+    }
+
+    input UpdateCustomerInput {
+        newPassword: String
+        confirmPassword: String
+        client: UpdateClientInput
+    }
+
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
@@ -217,6 +245,9 @@ const typeDefs = gql `
         getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, orderBy: String, orderType: String, onlyPublished: Boolean): ProductsResponse
         getPublicProducts(page: Int, pageSize: Int, searchTerm: String, orderBy: String, orderType: String): ProductsResponse
         getProduct(id: ID!): Product
+
+        loginCustomer(email: String! password: String!): CustomerLogin
+        
     }
 
     type Mutation {
@@ -245,6 +276,7 @@ const typeDefs = gql `
         deleteProduct(id: ID!): String
 
         createCustomer(input: CustomerInput!): Client
+        updateCostumer(input: UpdateCustomerInput!): Client
     }
 `;
 

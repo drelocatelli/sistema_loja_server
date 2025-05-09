@@ -30,7 +30,7 @@ module.exports = {
             const token = jwt.sign({
                 userId: login.id,
             }, process.env.JWT_SECRET_KEY, {
-                expiresIn: '2h'
+                expiresIn: '30d'
             });
             
             

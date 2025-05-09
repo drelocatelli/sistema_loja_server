@@ -4,7 +4,7 @@ const authMiddleware = (resolve) => (parent, args, context, info) => {
     const token = context.req.headers.authorization?.split(' ')[1]; 
 
     if (!token) {
-      throw new Error('Token necessário');
+      throw new Error('É necessário estar autenticado');
     }
 
     try {

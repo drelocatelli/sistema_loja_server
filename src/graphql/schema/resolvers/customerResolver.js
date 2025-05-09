@@ -3,9 +3,55 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Client = require("../../../models/Client");
 const sequelize = require("../../../../db");
+const customerAuthMiddleware = require("../../../middlewares/customerMiddleware");
+
+async function authenticate(email, password) {
+    const client = await Client.findOne({
+        where: {
+            email: email
+        },
+        include: [
+            {
+                model: Customer
+            }
+        ]
+    });
+
+    if(!client) {
+        throw new Error('Cliente não existe!');
+    }
+
+    console.log('Cliente tentou entrar:', client.id, ('nome: ' + client.name))
+
+
+    const dbPass = (client.customer.password).toString();
+    const passwordMatch = await bcrypt.compare(password, dbPass);
+
+    if(!passwordMatch) {
+        throw new Error('Senha incorreta!');
+    }
+
+    console.log('Cliente entrou:', client.id, ('nome: ' + client.name))
+
+    return client;
+}
 
 module.exports = {
-    Query: {},
+    Query: {
+        loginCustomer: async(_, {email, password}) => {
+            
+            const client = await authenticate(email, password);
+
+            const token = jwt.sign({
+                userId: client.id,
+            }, process.env.JWT_SECRET_KEY, {
+                expiresIn: '30d'
+            });
+
+            return {token};
+            
+        }
+    },
     Mutation: {
         createCustomer: async(_, {input}) => {
             if(input.password != input.confirmPassword) {
@@ -24,8 +70,9 @@ module.exports = {
                 const client = await Client.create(input.client, {transaction: transaction});
 
                 // Cria o cliente (Customer) com o ID do client
+                const hashedPassword = await bcrypt.hash(input.password, 10);
                 const customer = await Customer.create({
-                    password: await bcrypt.hash(input.password, 10),
+                    password: hashedPassword,
                     clientId: client.id
                 }, {transaction: transaction});
 
@@ -37,6 +84,30 @@ module.exports = {
                 await transaction.rollback();
                 throw new Error('Erro ao criar o cliente ou o customer: ' + error.message);
             }
-        }
+        },
+
+        updateCostumer: customerAuthMiddleware(async(_, {input}, context) => {
+            const {customerLoggedIn} = context;
+            
+            const client = await Client.findByPk(customerLoggedIn.id, {
+                include: [
+                    {
+                        model: Customer
+                    }
+                ]
+            });
+
+            if(!client) {
+                throw new Error('Client não encontrado!');
+            }
+
+            const passwordMatch = (input.newPassword === input.confirmPassword);
+
+            if(!passwordMatch) {
+                throw new Error('Senhas não conferem!');
+            }
+            
+            return client.update(input.client);
+        }),
     }
 };

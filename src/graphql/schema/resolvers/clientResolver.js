@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const Client = require('../../../models/Client');
 const authMiddleware = require('../../../middlewares/loginMiddleware');
+const Customer = require('../../../models/Customer');
 
 module.exports = {
     Query: {
@@ -25,7 +26,14 @@ module.exports = {
 
             props.where = condition;
             
-            const {count, rows} = await Client.findAndCountAll(props);
+            const {count, rows} = await Client.findAndCountAll({
+                ...props,
+                include: [
+                    {
+                        model: Customer,
+                    }
+                ]
+            });
 
             const totalPages = Math.ceil(count / pageSize);
 

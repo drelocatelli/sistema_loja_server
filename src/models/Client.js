@@ -62,7 +62,6 @@ const Client = sequelize.define('clients', {
 
 Client.hasOne(Customer, {
     foreignKey: 'clientId',
-    as: 'customers'
 });
 
 module.exports = Client;
