@@ -50,7 +50,18 @@ module.exports = {
 
             return {token};
             
-        }
+        },
+        getCustomerLoggedIn: customerAuthMiddleware(async(_, __, context) => {
+            const {customerLoggedIn} = context;
+            const client = await Client.findByPk(customerLoggedIn.id, {
+                include: [
+                    {
+                        model: Customer
+                    }
+                ]
+            });
+            return client;
+        })
     },
     Mutation: {
         createCustomer: async(_, {input}) => {

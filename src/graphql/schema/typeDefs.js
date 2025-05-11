@@ -247,6 +247,7 @@ const typeDefs = gql `
         getProduct(id: ID!): Product
 
         loginCustomer(email: String! password: String!): CustomerLogin
+        getCustomerLoggedIn: Client
         
     }
 
