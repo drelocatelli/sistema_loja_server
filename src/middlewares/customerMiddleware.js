@@ -11,7 +11,7 @@ const customerAuthMiddleware = (resolve) => async (parent, args, context, info) 
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        context.customerLoggedIn = await Client.findOne({
+        const customerLoggedIn = await Client.findOne({
             where: {
                 id: decoded.userId
             },
@@ -21,9 +21,8 @@ const customerAuthMiddleware = (resolve) => async (parent, args, context, info) 
                 }
             ]
         });
-        // context.userId = decoded.userId;
-        // context.user = 
 
+        context.customerLoggedIn = customerLoggedIn;
 
         return resolve(parent, args, context, info);
     } catch(err) {

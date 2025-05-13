@@ -38,7 +38,7 @@ async function authenticate(email, password) {
 
 module.exports = {
     Query: {
-        loginCustomer: async(_, {email, password}) => {
+        loginCustomer: async(_, {email, password}, {res}) => {
             
             const client = await authenticate(email, password);
 
@@ -60,6 +60,11 @@ module.exports = {
                     }
                 ]
             });
+
+            if(!client) {
+                throw new Error('Client nao encontrado!');
+            }
+
             return client;
         })
     },
@@ -117,6 +122,8 @@ module.exports = {
             if(!passwordMatch) {
                 throw new Error('Senhas não conferem!');
             }
+
+            delete input.client.email;
             
             return client.update(input.client);
         }),
