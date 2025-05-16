@@ -124,8 +124,12 @@ module.exports = {
             }
 
             delete input.client.email;
+
+            const dataToUpdate = Object.fromEntries(
+                Object.entries(input.client).filter(([_, value]) => value !== null)
+            );
             
-            return client.update(input.client);
+            return client.update(dataToUpdate);
         }),
     }
 };
