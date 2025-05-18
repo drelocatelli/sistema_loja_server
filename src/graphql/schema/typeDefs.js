@@ -135,7 +135,7 @@ const typeDefs = gql `
     }
 
     input SalesUpdateInput {
-        id: ID!, 
+        id: ID!
         serial: String
         product_id: ID
         description: String
@@ -170,6 +170,42 @@ const typeDefs = gql `
 
     type CustomerLogin {
         token: String!
+    }
+
+    type Ticket {
+        id: ID!
+        clientId: Int!
+        colaboratorId: Int
+        title: String!
+        description: String!
+        category: TicketCategory!
+        priority: TicketPriority!
+        status: TicketStatus!
+        createdAt: String!
+        updatedAt: String!
+        client: Client
+        colaborator: Colaborator
+    }
+
+    enum TicketCategory {
+        conta
+        pagamento
+        entrega
+        produto
+        outros
+    }
+
+    enum TicketPriority {
+        baixa
+        media
+        alta
+    }
+
+    enum TicketStatus {
+        aberto
+        andamento
+        resolvido
+        fechado
     }
 
     input ProductInput {
@@ -228,6 +264,10 @@ const typeDefs = gql `
         client: UpdateClientInput
     }
 
+    input TicketInput {
+        title: String
+    }
+
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
@@ -248,6 +288,9 @@ const typeDefs = gql `
 
         loginCustomer(email: String! password: String!): CustomerLogin
         getCustomerLoggedIn: Client
+
+        getTickets(input: TicketInput): [Ticket]
+        getTicketsCustomerLoggedIn(input: TicketInput): [Ticket]
         
     }
 

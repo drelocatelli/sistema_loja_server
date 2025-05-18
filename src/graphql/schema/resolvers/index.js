@@ -5,6 +5,7 @@ const categoryResolver = require('./categoryResolver');
 const salesResolver = require('./salesResolver');
 const productResolver = require('./productResolver');
 const customerResolver = require('./customerResolver');
+const ticketsResolver = require('./ticketsResolver');
 
 const resolvers = {
   Query: {
@@ -14,6 +15,7 @@ const resolvers = {
     ...salesResolver.Query,
     ...productResolver.Query,
     ...customerResolver.Query,
+    ...ticketsResolver.Query,
   },
   Mutation: {
     ...colaboratorResolver.Mutation,
@@ -23,6 +25,7 @@ const resolvers = {
     ...salesResolver.Mutation,
     ...productResolver.Mutation,
     ...customerResolver.Mutation,
+    ...ticketsResolver.Mutation,
 
   },
 };
