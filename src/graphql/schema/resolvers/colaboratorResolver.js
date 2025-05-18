@@ -1,6 +1,5 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
-const Colaborator = require('../../../models/Colaborator');
-const Login = require('../../../models/Login');
+const models = require('../../../../models');
 const { Op } = require('sequelize');
 
 module.exports = {
@@ -15,7 +14,7 @@ module.exports = {
                 offset,
                 include: [
                     {
-                        model: Login,
+                        model: models.login,
                         required: false
                     }
                 ]
@@ -41,7 +40,7 @@ module.exports = {
 
             props.where = condition;
 
-            const {count, rows} = await Colaborator.findAndCountAll(props);
+            const {count, rows} = await models.Colaborator.findAndCountAll(props);
 
             const totalPages = Math.ceil(count / pageSize);
 
@@ -58,19 +57,19 @@ module.exports = {
             return data;
         }),
         getColaborator: authMiddleware(async (_, {id}) => {
-            return await Colaborator.findByPk(id);
+            return await models.Colaborator.findByPk(id);
         })
     },
 
     Mutation: {
         createColaborator: authMiddleware(async (_, {input}) => {
-            const newColaborator = await Colaborator.create(input);
+            const newColaborator = await models.Colaborator.create(input);
 
             return newColaborator;
         }),
 
         updateColaborator: authMiddleware(async (_, {input}) => {
-            const colaborator = await Colaborator.findByPk(input.id);
+            const colaborator = await models.Colaborator.findByPk(input.id);
 
             if(!colaborator) {
                 throw new Error('Colaborator não encontrado!');
@@ -86,7 +85,7 @@ module.exports = {
         }),
 
         deleteColaborator: authMiddleware(async (_, {id}) => {
-            const colaborator = await Colaborator.findByPk(id);
+            const colaborator = await models.Colaborator.findByPk(id);
 
             if(!colaborator) {
                 throw new Error('Colaborator não encontrado!');

@@ -1,12 +1,11 @@
-const Login = require('../../../models/Login');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Colaborator = require('../../../models/Colaborator');
+const models = require('../../../../models');
 
 module.exports = {
     Mutation: {
         login: async (_, {user, password}) => {
-            const login = await Login.findOne(
+            const login = await models.login.findOne(
                 {
                     where: {user},
                     include: [
@@ -37,13 +36,13 @@ module.exports = {
             return {error: false,  message: 'Logado com sucesso!', token, details: login};
         },
         assignColaboratorToUser: async(_, {userId, colaboratorId}) => {
-            const login =  await Login.update({colaborator_id: colaboratorId}, {where: {id: userId}});
+            const login =  await models.login.update({colaborator_id: colaboratorId}, {where: {id: userId}});
 
             if(!login) {
                 return {error: true, message: 'Login não existe!'};
             }
 
-            const user = await Login.findByPk(userId);
+            const user = await models.login.findByPk(userId);
 
             return user;
         }

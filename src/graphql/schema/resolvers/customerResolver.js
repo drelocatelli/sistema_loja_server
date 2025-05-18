@@ -1,18 +1,17 @@
-const Customer = require("../../../models/Customer");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Client = require("../../../models/Client");
 const sequelize = require("../../../../db");
 const customerAuthMiddleware = require("../../../middlewares/customerMiddleware");
+const models = require('../../../../models');
 
 async function authenticate(email, password) {
-    const client = await Client.findOne({
+    const client = await models.clients.findOne({
         where: {
             email: email
         },
         include: [
             {
-                model: Customer
+                model: models.customers
             }
         ]
     });
@@ -53,10 +52,10 @@ module.exports = {
         },
         getCustomerLoggedIn: customerAuthMiddleware(async(_, __, context) => {
             const {customerLoggedIn} = context;
-            const client = await Client.findByPk(customerLoggedIn.id, {
+            const client = await models.clients.findByPk(customerLoggedIn.id, {
                 include: [
                     {
-                        model: Customer
+                        model: models.customers
                     }
                 ]
             });
@@ -75,7 +74,7 @@ module.exports = {
             } 
 
             // checa se o cliente ja existe
-            const clientExists = await Client.findOne({where: {email : input.client.email}});
+            const clientExists = await models.clients.findOne({where: {email : input.client.email}});
             if(clientExists) {
                 throw new Error('O cliente já foi cadastrado!');
             }
@@ -83,11 +82,11 @@ module.exports = {
 
             try {
                 // Cria o cliente
-                const client = await Client.create(input.client, {transaction: transaction});
+                const client = await models.clients.create(input.client, {transaction: transaction});
 
                 // Cria o cliente (Customer) com o ID do client
                 const hashedPassword = await bcrypt.hash(input.password, 10);
-                const customer = await Customer.create({
+                const customer = await models.customers.create({
                     password: hashedPassword,
                     clientId: client.id
                 }, {transaction: transaction});
@@ -105,10 +104,10 @@ module.exports = {
         updateCostumer: customerAuthMiddleware(async(_, {input}, context) => {
             const {customerLoggedIn} = context;
             
-            const client = await Client.findByPk(customerLoggedIn.id, {
+            const client = await models.clients.findByPk(customerLoggedIn.id, {
                 include: [
                     {
-                        model: Customer
+                        model: models.customers
                     }
                 ]
             });

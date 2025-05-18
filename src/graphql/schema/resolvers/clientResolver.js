@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
-const Client = require('../../../models/Client');
 const authMiddleware = require('../../../middlewares/loginMiddleware');
-const Customer = require('../../../models/Customer');
+const models = require('../../../../models');
+
 
 module.exports = {
     Query: {
@@ -26,11 +26,11 @@ module.exports = {
 
             props.where = condition;
             
-            const {count, rows} = await Client.findAndCountAll({
+            const {count, rows} = await models.clients.findAndCountAll({
                 ...props,
                 include: [
                     {
-                        model: Customer,
+                        model: models.customers,
                     }
                 ]
             });
@@ -51,7 +51,7 @@ module.exports = {
         }),
 
         getClient: authMiddleware(async (_, {id}) => {
-            return await Client.findByPk(id);
+            return await models.clients.findByPk(id);
         })
     },
 
@@ -61,7 +61,7 @@ module.exports = {
                 throw new Error('Usuário não autenticado!');
             }
 
-            const newClient = await Client.create({
+            const newClient = await models.clients.create({
                 name,
                 email,
                 rg,
@@ -78,7 +78,7 @@ module.exports = {
             return newClient;
         }),
         updateClient: authMiddleware(async (_, {id, name, email, rg, cpf, phone, address, cep, city, state, country}) => {
-            const client = await Client.findByPk(id);
+            const client = await models.clients.findByPk(id);
 
             if(!client) {
                 throw new Error('Client not found!');
@@ -100,7 +100,7 @@ module.exports = {
             return client;
         }),
         deleteClient: authMiddleware(async (_, {id}) => {
-            const client = await Client.findByPk(id);
+            const client = await models.clients.findByPk(id);
 
             if(!client) {
                 throw new Error('Cliente não encontrado!');
@@ -113,7 +113,7 @@ module.exports = {
             return client;
         }),
         deleteClients: authMiddleware(async (_, {ids}) => {
-            const clients = await Client.findAll({
+            const clients = await models.clients.findAll({
                 where: {
                     id: {
                         [Op.in]: ids

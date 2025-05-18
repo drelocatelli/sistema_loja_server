@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const Client = require('../models/Client');
-const Customer = require('../models/Customer');
+const Client = require('../../models/Client');
+const Customer = require('../../models/Customer');
 
 const customerAuthMiddleware = (resolve) => async (parent, args, context, info) => {
     const token = context.req.headers.authorization?.split(' ')[1];

@@ -1,11 +1,7 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
-const Client = require('../../../models/Client');
-const Colaborator = require('../../../models/Colaborator');
-const Sale = require('../../../models/Sale');
-const Product = require('../../../models/Product');
 const { Op, Transaction } = require('sequelize');
 const { checkEntityExists,getImagesFromFolder } = require('../../../utils');
-const Category = require('../../../models/Category');
+const models = require('../../../../models');
 
 module.exports = {
     Query: {
@@ -41,7 +37,7 @@ module.exports = {
             props.where = condition;
 
             
-            let {count, rows} = await Sale.findAndCountAll(props);
+            let {count, rows} = await models.sales.findAndCountAll(props);
             
             rows = await Promise.all(
                 rows.map(async (sale) => { 
@@ -79,9 +75,9 @@ module.exports = {
         getSale: authMiddleware(async (_, {id}) => {
             return await Sale.findByPk(id, {
                 include: [
-                    {model: Client},
-                    {model: Colaborator},
-                    {model: Product},
+                    {model: models.clients},
+                    {model: models.colaborator},
+                    {model: models.products},
                 ]
             });
         })
@@ -89,22 +85,22 @@ module.exports = {
 
     Mutation: {
         createSale: authMiddleware(async (_, { input }) => {
-            const client = await Client.findByPk(input.client_id);
-            const colaborator = await Colaborator.findByPk(input.colaborator_id);
+            const client = await models.clients.findByPk(input.client_id);
+            const colaborator = await models.colaborator.findByPk(input.colaborator_id);
         
             await checkEntityExists(client, 'Cliente');
             await checkEntityExists(colaborator, 'Colaborador');
         
-            const transaction = await Sale.sequelize.transaction();
+            const transaction = await models.sales.sequelize.transaction();
         
             try {
                 console.log("Transaction started");
         
                 // Create sale
-                const saleRequest = await Sale.create(input, { transaction });
+                const saleRequest = await models.sales.create(input, { transaction });
         
                 // Update stock
-                const product = await Product.findByPk(input.product_id, { transaction });
+                const product = await model.sales.findByPk(input.product_id, { transaction });
         
                 if (!product) {
                     throw new Error('Produto não encontrado');
@@ -119,11 +115,11 @@ module.exports = {
         
         
                 // Fetch the created sale with associations
-                const sale = await Sale.findByPk(saleRequest.id, {
+                const sale = await model.sales.findByPk(saleRequest.id, {
                     include: [
-                        { model: Client },
-                        { model: Colaborator },
-                        { model: Product },
+                        { model: model.clients },
+                        { model: models.colaborator },
+                        { model: models.products },
                     ],
                     transaction, // Ensure the transaction is used here
                 });
@@ -147,17 +143,17 @@ module.exports = {
         
 
         updateSale: authMiddleware(async (_, {input}) => {
-            const client = await Client.findByPk(input.client_id);
-            const colaborator = await Colaborator.findByPk(input.colaborator_id);
+            const client = await models.clients.findByPk(input.client_id);
+            const colaborator = await models.colaborator.findByPk(input.colaborator_id);
 
             await checkEntityExists(client, 'Cliente');
             await checkEntityExists(colaborator, 'Colaborador');
 
-            const sale = await Sale.findByPk(input.id, {
+            const sale = await models.sales.findByPk(input.id, {
                 include: [
-                    {model: Client},
-                    {model: Colaborator},
-                    {model: Product},
+                    {model: models.clients},
+                    {model: models.colaborator},
+                    {model: models.products},
 
                 ]
             });
@@ -177,7 +173,7 @@ module.exports = {
 
         }),
         deleteSales: authMiddleware(async (_, {ids}) => {
-            const sales = await Sale.findAll({
+            const sales = await models.sales.findAll({
                 where: {
                     id: {
                         [Op.in]: ids

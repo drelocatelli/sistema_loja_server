@@ -1,15 +1,15 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
-const Category = require('../../../models/Category');
 const { Op } = require('sequelize');
+const models = require('../../../../models');
 
 module.exports = {
     Query: {
         getAllCategories: async (_, deleted = false) => {
             if(!deleted) {
-                return await Category.findAll({where: {deleted_at: null}});
+                return await models.categories.findAll({where: {deleted_at: null}});
             }
 
-            return await Category.findAll();
+            return await models.categories.findAll();
           
         },
         getCategories: async (_, {page = 1, pageSize = null, searchTerm = null, deleted = false}) => {
@@ -35,7 +35,7 @@ module.exports = {
 
             props.where = condition;
             
-            const {count, rows} = await Category.findAndCountAll(props);
+            const {count, rows} = await models.categories.findAndCountAll(props);
 
             const totalPages = pageSize != null ? Math.ceil(count / pageSize) : 1;
             pageSize = pageSize != null ? pageSize : 1;
@@ -53,17 +53,17 @@ module.exports = {
             return data;
         },
         getCategory: async (_, {id}) => {
-            return await Category.findByPk(id);
+            return await models.categories.findByPk(id);
         }
     },
 
     Mutation: {
         createCategory: authMiddleware(async (_, {name, description}) => {
-            const category = await Category.create({name, description});
+            const category = await models.categories.create({name, description});
             return category;
         }),
         updateCategory: authMiddleware(async (_, {id, name, description}) => {
-            const category = await Category.findByPk(id);
+            const category = await models.categories.findByPk(id);
 
             if(!category) {
                 throw new Error('Category not found!');
@@ -77,7 +77,7 @@ module.exports = {
             return category;
         }),
         deleteCategory: authMiddleware(async (_, {id}) => {
-            const category = await Category.findByPk(id);            
+            const category = await models.categories.findByPk(id);            
 
             if(!category) {
                 throw new Error('Category not found!');

@@ -1,8 +1,7 @@
 const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
-const Category = require('../../../models/Category')
-const Product = require('../../../models/Product');
 const { checkEntityExists, getImagesFromFolder } = require("../../../utils");
+const models = require('../../../../models');
 
 async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) {
     const offset = (page - 1) * pageSize;
@@ -12,7 +11,7 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
         limit: pageSize,
         offset,
         include: [
-            {model: Category},
+            {model: models.categories},
         ]
     }
     
@@ -32,7 +31,7 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
 
     props.where = condition;
 
-    let {count, rows} = await Product.findAndCountAll(props);
+    let {count, rows} = await models.products.findAndCountAll(props);
 
     const totalPages = Math.ceil(count / pageSize);
 
@@ -65,9 +64,9 @@ module.exports = {
             return data;
         },
         getProduct: (async (_, {id}) => {
-            return await Product.findByPk(id, {
+            return await models.products.findByPk(id, {
                 include: [
-                    {model: Category},
+                    {model: models.categories},
                 ]
             });
         })
@@ -75,14 +74,14 @@ module.exports = {
 
     Mutation: {
         createProduct: authMiddleware(async (_, {input}) => {
-            const category = await Category.findByPk(input.category_id);
+            const category = await models.categories.findByPk(input.category_id);
 
             await checkEntityExists(category, 'Categoria');
 
-            const productRequest = await Product.create(input);
-            const product = await Product.findByPk(productRequest.id, {
+            const productRequest = await models.products.create(input);
+            const product = await models.products.findByPk(productRequest.id, {
                 include: [
-                    {model: Category},
+                    {model: models.categories},
                 ]
             })
 
@@ -90,7 +89,7 @@ module.exports = {
         }),
         updateProduct: authMiddleware(async (_, {input}) => {
             
-            const product = await Product.findByPk(input.id, {
+            const product = await models.products.findByPk(input.id, {
                 include: [
                     {model: Category},
                 ]
@@ -110,9 +109,9 @@ module.exports = {
             return product;
         }),
         deleteProduct: authMiddleware(async (_, {id}) => {
-            const product = await Product.findByPk(id, {
+            const product = await models.products.findByPk(id, {
                 include: [
-                    {model: Category},
+                    {model: models.categories},
                 ]
             });
 
