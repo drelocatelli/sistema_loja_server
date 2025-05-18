@@ -16,7 +16,6 @@ module.exports = {
                     {
                         model: models.colaborator,
                         as: 'colaborator',
-                        required: false,
                     }
                 ]
             });
@@ -26,7 +25,13 @@ module.exports = {
             const tickets = await models.tickets.findAll({
                 where: {
                     clientId: context.customerLoggedIn.id
-                }
+                },
+                include: [
+                    {
+                        model: models.colaborator,
+                        as: 'colaborator',
+                    }
+                ]
             });
             return tickets;
         })
