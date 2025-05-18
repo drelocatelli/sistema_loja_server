@@ -124,6 +124,7 @@ module.exports = {
             }
 
             delete input.client.email;
+            delete input.client.name;
 
             const dataToUpdate = Object.fromEntries(
                 Object.entries(input.client).filter(([_, value]) => value !== null)
