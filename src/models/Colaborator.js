@@ -53,12 +53,9 @@ const Colaborator = sequelize.define('colaborator', {
     deletedAt: 'deleted_at',
 });
 
-Colaborator.associate = function(models) {
-    Colaborator.hasMany(Ticket, {
-        foreignKey: 'colaboratorId',
-        as: 'tickets'
-    })
-}
-
+Colaborator.hasMany(Ticket, {
+    foreignKey: 'colaboratorId',
+    as: 'tickets'
+})
 
 module.exports = Colaborator;

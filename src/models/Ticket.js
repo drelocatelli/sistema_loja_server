@@ -1,7 +1,7 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../../db");
-const Colaborator = require('./Colaborator.js');
-const Client = require('./Client.js');
+const Colaborator = require('./Colaborator');
+const Client = require('./Client');
 
 const Ticket = sequelize.define('tickets', {
     id: {
@@ -13,42 +13,32 @@ const Ticket = sequelize.define('tickets', {
     clientId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-            model: 'clients',
-            key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        unique: true,
     },
     colaboratorId: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        references: {
-            model: 'colaborator',
-            key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        unique: true,
     },
     title: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     description: {
-        type: Sequelize.TEXT,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     category: {
-        type: Sequelize.ENUM('conta', 'pagamento', 'entrega', 'produto', 'outros'),
+        type: DataTypes.ENUM('conta', 'pagamento', 'entrega', 'produto', 'outros'),
         allowNull: false
     },
     priority: {
         allowNull: false,
-        type: Sequelize.ENUM('baixa', 'media', 'alta'),
+        type: DataTypes.ENUM('baixa', 'media', 'alta'),
     },
     status: {
         allowNull: false,
-        type: Sequelize.ENUM('aberto', 'andamento', 'resolvido', 'fechado'),
+        type: DataTypes.ENUM('aberto', 'andamento', 'resolvido', 'fechado'),
         defaultValue: 'aberto'
     },
     createdAt: {
@@ -61,20 +51,7 @@ const Ticket = sequelize.define('tickets', {
     },
 });
 
-Ticket.associate = function(models) {
-    Ticket.belongsTo(Client, {
-        foreignKey: 'clientId',
-        as: 'client'
-    });
-    
-}
-
-Ticket.associate = function(models) {
-    Ticket.belongsTo(Colaborator, {
-        foreignKey: 'colaboratorId',
-        as: 'colaborator'
-    });
-    
-}
+Ticket.belongsTo(Client, { foreignKey: 'clientId', as: 'client' });
+Ticket.belongsTo(Colaborator, { foreignKey: 'colaboratorId', as: 'colaborator' });
 
 module.exports = Ticket;

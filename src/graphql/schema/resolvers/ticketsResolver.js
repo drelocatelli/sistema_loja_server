@@ -14,11 +14,10 @@ module.exports = {
                         as: 'client',
                         required: true
                     },
-                    {
-                        model: Colaborator,
-                        required: false,
-                        as: 'colaborator'
-                    }
+                    // {
+                    //     model: Colaborator,
+                    //     required: false,
+                    // }
                 ]
             });
             return tickets;
