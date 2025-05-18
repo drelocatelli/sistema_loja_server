@@ -31,14 +31,12 @@ fs
     db[model.name] = model;
   });
 
-// Executa os métodos associate para criar as associações
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
-db.sequelize = sequelize;  // << Importante exportar a instância do Sequelize
 db.Sequelize = Sequelize;
 
 module.exports = db;

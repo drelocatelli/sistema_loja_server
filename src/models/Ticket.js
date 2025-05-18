@@ -64,14 +64,17 @@ const Ticket = sequelize.define('tickets', {
 Ticket.associate = function(models) {
     Ticket.belongsTo(Client, {
         foreignKey: 'clientId',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        as: 'client'
     });
+    
+}
+
+Ticket.associate = function(models) {
     Ticket.belongsTo(Colaborator, {
         foreignKey: 'colaboratorId',
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        as: 'colaborator'
     });
+    
 }
 
 module.exports = Ticket;

@@ -1,5 +1,6 @@
 const {DataTypes, Sequelize} = require('sequelize');
 const sequelize = require('../../db.js');
+const Ticket = require('./Ticket.js');
 
 const Colaborator = sequelize.define('colaborator', {
     id: {
@@ -51,6 +52,13 @@ const Colaborator = sequelize.define('colaborator', {
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
 });
+
+Colaborator.associate = function(models) {
+    Colaborator.hasMany(Ticket, {
+        foreignKey: 'colaboratorId',
+        as: 'tickets'
+    })
+}
 
 
 module.exports = Colaborator;

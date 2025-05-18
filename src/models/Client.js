@@ -1,6 +1,7 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../../db.js");
 const Customer = require('./Customer.js');
+const Ticket = require("./Ticket.js");
 
 const Client = sequelize.define('clients', {
     id: {
@@ -60,8 +61,15 @@ const Client = sequelize.define('clients', {
     deletedAt: 'deleted_at',
 });
 
-Client.hasOne(Customer, {
-    foreignKey: 'clientId',
-});
+Client.associate = function(models) {
+    Client.hasOne(Customer, {
+        foreignKey: 'clientId',
+    });
+    
+    Client.hasMany(Ticket, {
+        foreignKey: 'clientId',
+        as: 'tickets'
+    })
+}
 
 module.exports = Client;
