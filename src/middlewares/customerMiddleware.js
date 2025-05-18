@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Client = require('../../models/Client');
-const Customer = require('../../models/Customer');
+const models = require('../../models');
 
 const customerAuthMiddleware = (resolve) => async (parent, args, context, info) => {
     const token = context.req.headers.authorization?.split(' ')[1];
@@ -11,13 +10,13 @@ const customerAuthMiddleware = (resolve) => async (parent, args, context, info) 
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-        const customerLoggedIn = await Client.findOne({
+        const customerLoggedIn = await models.clients.findOne({
             where: {
                 id: decoded.userId
             },
             include: [
                 {
-                    model: Customer
+                    model: models.customers
                 }
             ]
         });
@@ -26,6 +25,7 @@ const customerAuthMiddleware = (resolve) => async (parent, args, context, info) 
 
         return resolve(parent, args, context, info);
     } catch(err) {
+        console.error(err);
         throw new Error('Sessão expirada. Faça login novamente.');
     }
 
