@@ -37,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false,
     });
 
-    Login.asssociate = function (models) {
-        Login.belongsTo(models.Colaborator, { foreignKey: 'colaborator_id' });
+    Login.associate = function (models) {
+        Login.belongsTo(models.colaborator, { foreignKey: 'colaborator_id' });
     }
 
     return Login;
