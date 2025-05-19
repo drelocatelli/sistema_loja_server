@@ -10,7 +10,7 @@ module.exports = {
                     where: {user},
                     include: [
                         {
-                            model: Colaborator,
+                            model: models.colaborator,
                         }
                     ]
                 },

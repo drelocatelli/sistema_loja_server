@@ -268,6 +268,11 @@ const typeDefs = gql `
         title: String
     }
 
+    input TicketUpdateInput {
+        id: ID!
+        status: TicketStatus
+    }
+
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
@@ -321,6 +326,9 @@ const typeDefs = gql `
 
         createCustomer(input: CustomerInput!): Client
         updateCostumer(input: UpdateCustomerInput!): Client
+
+        updateTicketStatus(input: TicketUpdateInput!): Ticket
+        createTicket(input: TicketInput!): Ticket
     }
 `;
 

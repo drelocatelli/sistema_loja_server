@@ -13,12 +13,12 @@ module.exports = {
                 limit: pageSize,
                 offset,
                 include: [
-                    {model: Client},
-                    {model: Colaborator},
+                    {model: models.clients},
+                    {model: models.colaborator},
                     {
-                        model: Product,
+                        model: models.products,
                         include: [
-                            {model: Category},
+                            {model: models.categories},
                         ]
                     },
                 ]
@@ -100,7 +100,7 @@ module.exports = {
                 const saleRequest = await models.sales.create(input, { transaction });
         
                 // Update stock
-                const product = await model.sales.findByPk(input.product_id, { transaction });
+                const product = await models.sales.findByPk(input.product_id, { transaction });
         
                 if (!product) {
                     throw new Error('Produto não encontrado');
@@ -115,9 +115,9 @@ module.exports = {
         
         
                 // Fetch the created sale with associations
-                const sale = await model.sales.findByPk(saleRequest.id, {
+                const sale = await models.sales.findByPk(saleRequest.id, {
                     include: [
-                        { model: model.clients },
+                        { model: models.clients },
                         { model: models.colaborator },
                         { model: models.products },
                     ],

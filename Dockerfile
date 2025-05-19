@@ -17,4 +17,6 @@ COPY . .
 EXPOSE 4000
 
 # Comando para rodar a aplicação
-CMD ["node", "index.js"]
+CMD ["sh", "-c", "npx sequelize-cli db:migrate && node index.js"]
+
+# CMD ["node", "index.js"]
