@@ -274,7 +274,11 @@ const typeDefs = gql `
 
     input TicketUpdateInput {
         id: ID!
-        status: TicketStatus
+        status: TicketStatus!
+    }
+
+    input GetTicketByIdInput {
+        id: ID!
     }
 
     type Query {
@@ -300,7 +304,7 @@ const typeDefs = gql `
 
         getTickets(input: TicketInput): [Ticket]
         getTicketsCustomerLoggedIn(input: TicketInput): [Ticket]
-        
+        getTicketById(input: GetTicketByIdInput): Ticket
     }
 
     type Mutation {
