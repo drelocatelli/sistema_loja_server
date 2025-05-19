@@ -37,6 +37,12 @@ module.exports = {
         })
     },
     Mutation: {
-
+        createTicket: customerAuthMiddleware(async (_, {input}, context) => {
+            const clientId = context.customerLoggedIn.id;
+            input.clientId = clientId;
+            
+            const ticket = await models.tickets.create(input);
+            return ticket;
+        }),
     }
 };
