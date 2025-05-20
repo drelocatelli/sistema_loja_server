@@ -1,25 +1,45 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
 const customerAuthMiddleware = require('../../../middlewares/customerMiddleware');
 const models = require('../../../../models');
+const { getPropsResponse } = require("../../../utils");
 
 module.exports = {
     Query: {
-        getTickets: authMiddleware(async (_, {input}) => {
+        getTickets: authMiddleware(async (_, {page = 1, pageSize = 7}) => {
             
-            const tickets = await models.tickets.findAll({
-                include: [
-                    {
-                        model: models.clients,
-                        as: 'client',
-                        required: true
-                    },
-                    {
-                        model: models.colaborator,
-                        as: 'colaborator',
-                    }
-                ]
+            const props = getPropsResponse({
+                orderBy: 'createdAt',
+                page,
+                pageSize
             });
-            return tickets;
+            
+            const include = [
+                {
+                    model: models.clients,
+                    as: 'client',
+                    required: true
+                },
+                {
+                    model: models.colaborator,
+                    as: 'colaborator',
+                }
+            ];
+            props.include = include;
+
+            
+            const {count, rows} = await models.tickets.findAndCountAll(props);
+
+            const totalPages = Math.ceil(count / pageSize);
+
+            return {
+                tickets: rows,
+                pagination: {
+                    totalRecords: count,
+                    totalPages,
+                    currentPage: page,
+                    pageSize
+                }
+            };
         }),
         getTicketsCustomerLoggedIn: customerAuthMiddleware(async(_, {input}, context) => {
             const tickets = await models.tickets.findAll({

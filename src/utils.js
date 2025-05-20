@@ -6,8 +6,6 @@ const checkEntityExists = async (entity, entityName) => {
       throw new Error(`${entityName} não encontrado`);
     }
   };
-
-
   
   const findImageByName = (imageName, dirPath) => {
     return new Promise((resolve, reject) => {
@@ -73,4 +71,26 @@ const getImagesFromFolder = async (itemId, folder) => {
   })
 }
 
-module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder };
+const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC'} = {}) => {
+  const offset = (page - 1) * pageSize;
+
+  const props = {
+    order: [[orderBy, orderType]],
+    limit: pageSize,
+    offset,
+  }
+
+  const condition = {};
+
+  if(searchTerm && searchTerm.length != 0) {
+    condition.name = {[Op.like] : `%${searchTerm}%`};
+  }
+  if(deleted) {
+    condition.deleted_at = {[Op.ne] : null};
+  }
+  props.where = condition;
+  return props;
+  
+}
+
+module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder, getPropsResponse };

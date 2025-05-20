@@ -162,6 +162,11 @@ const typeDefs = gql `
         products: [Product]
         pagination: PaginationInfo
     }
+    
+    type TicketsResponse {
+        tickets: [Ticket]
+        pagination: PaginationInfo
+    }
 
     type Customer {
         id: ID!
@@ -270,6 +275,7 @@ const typeDefs = gql `
         category: TicketCategory!
         colaboratorId: ID
         priority: TicketPriority!
+
     }
 
     input TicketUpdateInput {
@@ -302,7 +308,7 @@ const typeDefs = gql `
         loginCustomer(email: String! password: String!): CustomerLogin
         getCustomerLoggedIn: Client
 
-        getTickets(input: TicketInput): [Ticket]
+        getTickets(page: Int, pageSize: Int): TicketsResponse
         getTicketsCustomerLoggedIn(input: TicketInput): [Ticket]
         getTicketById(input: GetTicketByIdInput): Ticket
     }

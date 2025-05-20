@@ -1,36 +1,23 @@
 const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
-const { checkEntityExists, getImagesFromFolder } = require("../../../utils");
+const { checkEntityExists, getImagesFromFolder, getPropsResponse } = require("../../../utils");
 const models = require('../../../../models');
 
 async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) {
-    const offset = (page - 1) * pageSize;
 
-    const props = {
-        order: [[orderBy, orderType]],
-        limit: pageSize,
-        offset,
-        include: [
-            {model: models.categories},
-        ]
-    }
+    const props = getPropsResponse({
+        page,
+        pageSize,
+        searchTerm,
+        deleted,
+        orderBy,
+        orderType,
+    });
+
+    props.include = [
+        {model: models.categories},
+    ];
     
-    const condition = {};
-
-    if(searchTerm && searchTerm.length != 0) {
-        condition.name = {[Op.like] : `%${searchTerm}%`};
-    }
-
-    if(deleted) {
-        condition.deleted_at = {[Op.ne] : null};
-    }
-
-    if(onlyPublished) {
-        condition.is_published = {[Op.eq] : 1};
-    }
-
-    props.where = condition;
-
     let {count, rows} = await models.products.findAndCountAll(props);
 
     const totalPages = Math.ceil(count / pageSize);
