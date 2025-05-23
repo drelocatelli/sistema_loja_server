@@ -41,24 +41,45 @@ module.exports = {
                 }
             };
         }),
-        getTicketsCustomerLoggedIn: customerAuthMiddleware(async(_, {input}, context) => {
-            const tickets = await models.tickets.findAll({
-                where: {
-                    clientId: context.customerLoggedIn.id
-                },
-                include: [
-                    {
-                        model: models.colaborator,
-                        as: 'colaborator',
-                    },
-                    {
-                        model: models.clients,
-                        as: 'client',
-                        required: true
-                    }
-                ]
+        getTicketsCustomerLoggedIn: customerAuthMiddleware(async(_, {page = 1, pageSize = 7}, context) => {
+            const props = getPropsResponse({
+                orderBy: 'createdAt',
+                page,
+                pageSize
             });
-            return tickets;
+
+            props.where = {
+                ...props.where,
+                clientId: context.customerLoggedIn.id
+            };
+
+            const include = [
+                {
+                    model: models.colaborator,
+                    as: 'colaborator',
+                },
+                {
+                    model: models.clients,
+                    as: 'client',
+                    required: true
+                }
+            ];
+
+            props.include = include;
+            
+            const {count, rows: tickets} = await models.tickets.findAndCountAll(props);
+
+            const totalPages = Math.ceil(count / pageSize);
+
+            return {
+                tickets,
+                pagination: {
+                    totalRecords: count,
+                    totalPages,
+                    currentPage: page,
+                    pageSize
+                }
+            };
         }),
         getTicketById: customerAuthMiddleware(async (_, {id}, context) => {
             const ticket = await models.tickets.findByPk(id, {

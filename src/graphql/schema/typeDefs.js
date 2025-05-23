@@ -306,7 +306,7 @@ const typeDefs = gql `
         getCustomerLoggedIn: Client
 
         getTickets(page: Int, pageSize: Int): TicketsResponse
-        getTicketsCustomerLoggedIn(input: TicketInput): [Ticket]
+        getTicketsCustomerLoggedIn(page: Int, pageSize: Int): TicketsResponse
         getTicketById(input: GetTicketByIdInput): Ticket
     }
 
