@@ -83,6 +83,16 @@ module.exports = {
     Mutation: {
         createTicket: customerAuthMiddleware(async (_, {input}, context) => {
             const clientId = context.customerLoggedIn.id;
+            if (input.priority === undefined) {
+                delete input.priority;
+            }
+            if (input.status === undefined) {
+                delete input.status;
+            }
+            if (input.colaboratorId === undefined) {
+                delete input.colaboratorId;
+            }
+            
             input.clientId = clientId;
 
             const created = await models.tickets.create(input);

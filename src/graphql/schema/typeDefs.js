@@ -273,9 +273,6 @@ const typeDefs = gql `
         title: String!
         description: String!
         category: TicketCategory!
-        colaboratorId: ID
-        priority: TicketPriority!
-
     }
 
     input TicketUpdateInput {

@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       priority: {
         type: DataTypes.ENUM('baixa', 'media', 'alta'),
-        allowNull: false,
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM('aberto', 'andamento', 'resolvido', 'fechado'),
