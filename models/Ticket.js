@@ -45,7 +45,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.DATE
       },
-    });
+     
+    },
+  );
   
     Ticket.associate = (models) => {
       Ticket.belongsTo(models.clients, { foreignKey: 'clientId', as: 'client' });
