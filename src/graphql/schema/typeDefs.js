@@ -208,8 +208,8 @@ const typeDefs = gql `
         authorId: ID!
         authorType: String!
         content: String!
-        client: Client
         author: Author
+        createdAt: String!
         updatedAt: String!
         deletedAt: String
     }
