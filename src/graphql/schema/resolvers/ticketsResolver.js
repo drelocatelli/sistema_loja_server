@@ -103,15 +103,22 @@ module.exports = {
                         model: models.colaborator,
                         as: 'colaborator',
                     },
-                    {
-                        model: models.comments,
-                        required: false,
-                        as: 'comments'
-                    }
                 ]
             });
 
-            return {ticket, comments: ticket.comments};
+            const comments = await models.comments.findAll({
+                where: {
+                    commentableId: ticket.id,
+                    commentableType: 'ticket'
+                },
+             });
+
+             for(const comment of comments) {
+                const author = await comment.getAuthor(models);
+                comment.author = author;
+             }
+
+            return {ticket, comments};
         })
     },
     Mutation: {

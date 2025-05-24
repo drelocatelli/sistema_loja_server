@@ -197,6 +197,10 @@ const typeDefs = gql `
         comments: [ClientComment]
     }
 
+    type Author {
+        name: String!
+    }
+
     type ClientComment {
         id: ID!
         commentableType: String!
@@ -205,7 +209,7 @@ const typeDefs = gql `
         authorType: String!
         content: String!
         client: Client
-        createdAt: String!
+        author: Author
         updatedAt: String!
         deletedAt: String
     }

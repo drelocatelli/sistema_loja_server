@@ -63,5 +63,21 @@ module.exports = (sequelize, DataTypes) => {
 
     }
 
+    Comment.prototype.getAuthor = async function(models) {
+        if (this.authorType === 'client') {
+            const client = await models.clients.findByPk(this.authorId, {
+                attributes: ['name']
+            });
+            return client;
+        } else if (this.authorType === 'colaborator') {
+            const colaborator = await models.colaborator.findByPk(this.authorId, {
+                attributes: ['name']
+            });
+            return colaborator;
+        }
+        return null;
+    };
+    
+
     return Comment;
 }
