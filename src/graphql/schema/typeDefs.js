@@ -191,7 +191,25 @@ const typeDefs = gql `
         client: Client
         colaborator: Colaborator
     }
+    
+    type TicketWithComments {
+        ticket: Ticket
+        comments: [ClientComment]
+    }
 
+    type ClientComment {
+        id: ID!
+        commentableType: String!
+        commentableId: ID!
+        authorId: ID!
+        authorType: String!
+        content: String!
+        client: Client
+        createdAt: String!
+        updatedAt: String!
+        deletedAt: String
+    }
+    
     enum TicketCategory {
         conta
         pagamento
@@ -284,6 +302,11 @@ const typeDefs = gql `
         id: ID!
     }
 
+    input TicketCommentInput {
+        ticketId: ID!
+        content: String!
+    }
+
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
@@ -307,7 +330,7 @@ const typeDefs = gql `
 
         getTickets(page: Int, pageSize: Int): TicketsResponse
         getTicketsCustomerLoggedIn(page: Int, pageSize: Int, orderBy: String, orderType: String): TicketsResponse
-        getTicketById(input: GetTicketByIdInput): Ticket
+        getTicketById(input: GetTicketByIdInput): TicketWithComments
     }
 
     type Mutation {
@@ -340,6 +363,7 @@ const typeDefs = gql `
 
         updateTicketStatus(input: TicketUpdateInput!): Ticket
         createTicket(input: TicketInput!): Ticket
+        createTicketComment(input: TicketCommentInput!): ClientComment
     }
 `;
 

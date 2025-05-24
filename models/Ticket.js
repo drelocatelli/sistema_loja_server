@@ -52,6 +52,14 @@ module.exports = (sequelize, DataTypes) => {
     Ticket.associate = (models) => {
       Ticket.belongsTo(models.clients, { foreignKey: 'clientId', as: 'client' });
       Ticket.belongsTo(models.colaborator, { foreignKey: 'colaboratorId', as: 'colaborator' });
+      Ticket.hasMany(models.comments, {
+        foreignKey: 'commentableId',
+        constraints: false,
+        scope: {
+          commentableType: 'ticket'
+        },
+        as: 'comments'
+      })
     };
   
     return Ticket;

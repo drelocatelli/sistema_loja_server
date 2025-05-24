@@ -102,10 +102,16 @@ module.exports = {
                     {
                         model: models.colaborator,
                         as: 'colaborator',
+                    },
+                    {
+                        model: models.comments,
+                        required: false,
+                        as: 'comments'
                     }
                 ]
             });
-            return ticket;
+
+            return {ticket, comments: ticket.comments};
         })
     },
     Mutation: {
@@ -146,6 +152,36 @@ module.exports = {
             await ticket.save();
 
             return ticket;
+        }),
+        createTicketComment: customerAuthMiddleware(async (_, args, context) => {
+            const {ticketId, content} = args.input;
+            const ticket = await models.tickets.findByPk(ticketId);
+
+            const {clientId} = ticket;
+
+            const comment = await models.comments.create({
+                content,
+                commentableId: ticketId,
+                commentableType: 'ticket',
+                authorId: clientId,
+                authorType: 'client'
+            });
+
+            const commentWithAuthor = await models.comments.findByPk(comment.id, {
+                where: {
+                    authorType: 'client'
+                },
+                include: [
+                    {
+                        model: models.clients, as: 'client',
+                    },
+                ],
+            });
+
+            console.log({commentWithAuthor})
+
+            return commentWithAuthor;
+            
         }),
     }
 };

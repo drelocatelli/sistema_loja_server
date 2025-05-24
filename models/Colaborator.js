@@ -58,6 +58,15 @@ module.exports = (sequelize, DataTypes) => {
             as: 'tickets'
           });
         Colaborator.hasOne(models.login, { foreignKey: 'colaborator_id' });
+
+        Colaborator.hasMany(models.comments, {
+            foreignKey: 'authorId',
+            constraints: false,
+            scope: {
+                authorType: 'colaborator'
+            },
+            as: 'comments'
+        });
     }
     return Colaborator;
 }

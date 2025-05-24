@@ -68,7 +68,17 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'clientId',
             as: 'tickets'
         })
+
+        Client.hasMany(models.comments, {
+            foreignKey: 'authorId',
+            constraints: false,
+            scope: {
+                authorType: 'client'
+            },
+            as: 'comments'
+        });
     }
+
 
     return Client;
 };
