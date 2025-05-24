@@ -86,10 +86,12 @@ module.exports = {
                 }
             };
         }),
-        getTicketById: customerAuthMiddleware(async (_, {id}, context) => {
+        getTicketById: customerAuthMiddleware(async (_, args, context) => {
+            const {id} = args.input;
+
             const ticket = await models.tickets.findByPk(id, {
                 where: {
-                    clientId: context.customerLoggedIn.id
+                    clientId: context.customerLoggedIn.id,
                 },
                 include: [
                     {
