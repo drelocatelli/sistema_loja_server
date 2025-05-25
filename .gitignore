@@ -1,7 +1,10 @@
 node_modules
 yarn.lock
 .env
+!public/uploads/imgs/products/
 public/uploads/imgs/products/*
+!public/uploads/imgs/ticket/
+public/uploads/imgs/ticket/*
 .qodo
 .env copy
 config/config.json

@@ -33,8 +33,10 @@ const server = new ApolloServer({
  });
 
  app.use(express.static(path.resolve('public')));
-
+ 
  app.use(express.json());
+ app.use(express.urlencoded({ extended: false }));
+
  
  // routes
  app.use(uploadController);

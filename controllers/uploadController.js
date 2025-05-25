@@ -5,19 +5,33 @@ const fs = require('fs');
 const { findImageByName } = require('../src/utils');
 const authMiddlewareExpress = require('../src/middlewares/loginExpressMiddleware');
 const cors = require('cors');
+const authCustomerMiddlewareExpress = require('../src/middlewares/customerExpressMiddleware');
 
 const uploadEndpoint = './public/uploads';
 
-// const router = express.Router();
 const router = express();
 router.use(cors())
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = req.body.path || ''; // Diretório especificado no campo "path"
+
     const fullPath = path.join(uploadEndpoint, uploadPath);
 
-    // Certifica-se de que o diretório existe
+    fs.mkdirSync(fullPath, { recursive: true });
+    cb(null, fullPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // Usa o nome original do arquivo
+  },
+});
+
+const storageTicket = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = 'ticket'; // Diretório especificado no campo "path"
+
+    const fullPath = path.join(uploadEndpoint, 'imgs', uploadPath);
+
     fs.mkdirSync(fullPath, { recursive: true });
     cb(null, fullPath);
   },
@@ -27,19 +41,37 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+const uploadTicket = multer({ storage: storageTicket });
 
 router.post('/upload', authMiddlewareExpress, upload.single('file'), (req, res) => {
   console.log('enviando arquivo...')
-  if(!req.file) {
-    return res.status(400).json({message: 'Não foi possível enviar mensagem'});
-  }
 
+  console.log(req.body)
+  
+  if(!req.file) {
+    return res.status(400).json({message: 'Não foi possível enviar arquivo'});
+  }
 
   res.status(200).json({
     message: 'Arquivo enviado com sucesso!',
     file: req.file, // Detalhes do arquivo enviado
     body: req.body, // Outros campos enviados no formulário
   });
+});
+
+router.post('/upload/customer', authCustomerMiddlewareExpress, uploadTicket.single('file'), (req, res) => {
+  console.log('cliente enviando arquivo...')
+
+
+  if(!req.file) {
+    return res.status(400).json({message: 'Não foi possível enviar arquivo'});
+  }
+  
+  res.json({
+    message: 'Arquivo enviado com sucesso!',
+    file: req.file, // Detalhes do arquivo enviado
+    body: req.body, // Outros campos enviados no formulário
+  })
 });
 
 router.get('/static/products/:filename', async (req, res) => {
@@ -53,7 +85,6 @@ router.get('/static/products/:filename', async (req, res) => {
     
     // Define the full path to the file
     const ptfile = await findImageByName(filename, path.join(__dirname, '..', 'public', 'uploads', 'imgs', 'products'))
-    console.log({ptfile})
     const filePath = ptfile;
   
     // Send the file
@@ -69,5 +100,35 @@ router.get('/static/products/:filename', async (req, res) => {
   }
 
 });
+
+router.get('/static/imgs/ticket/:filename', async (req, res) => {
+  try {
+    const filename = req.params.filename;
+    if (!filename) return res.status(400).send('Filename is required');
+
+    const getPath = path.join(__dirname, '..', 'public', 'uploads', 'imgs', 'ticket');
+    const filePath = path.join(getPath, filename);
+
+    // Opcional: verificar se o arquivo existe antes de enviar
+    const fs = require('fs').promises;
+    try {
+      await fs.access(filePath);  // Verifica se o arquivo existe
+    } catch {
+      return res.status(404).send('File not found');
+    }
+
+    res.sendFile(filePath, err => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error sending file');
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 module.exports = router;
