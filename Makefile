@@ -14,6 +14,7 @@ deploy:
 		--exclude=node_modules \
 		--exclude=.env \
 		--exclude=public/uploads/imgs/products \
+		--exclude=public/uploads/imgs/ticket \
 		./ $(HOST_RACCOON):~/containers/raccoon-store-server
 
 	# Sobe os containers no servidor
