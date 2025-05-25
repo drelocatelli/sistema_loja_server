@@ -101,34 +101,5 @@ router.get('/static/products/:filename', async (req, res) => {
 
 });
 
-router.get('/static/imgs/ticket/:filename', async (req, res) => {
-  try {
-    const filename = req.params.filename;
-    if (!filename) return res.status(400).send('Filename is required');
-
-    const getPath = path.join(__dirname, '..', 'public', 'uploads', 'imgs', 'ticket');
-    const filePath = path.join(getPath, filename);
-
-    // Opcional: verificar se o arquivo existe antes de enviar
-    const fs = require('fs').promises;
-    try {
-      await fs.access(filePath);  // Verifica se o arquivo existe
-    } catch {
-      return res.status(404).send('File not found');
-    }
-
-    res.sendFile(filePath, err => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error sending file');
-      }
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
 
 module.exports = router;
