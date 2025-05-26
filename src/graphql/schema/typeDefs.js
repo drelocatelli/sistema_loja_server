@@ -333,7 +333,7 @@ const typeDefs = gql `
         getCustomerLoggedIn: Client
 
         getTickets(page: Int, pageSize: Int): TicketsResponse
-        getTicketsCustomerLoggedIn(page: Int, pageSize: Int, orderBy: String, orderType: String): TicketsResponse
+        getTicketsCustomerLoggedIn(page: Int, pageSize: Int, orderBy: String, orderType: String, status: TicketStatus): TicketsResponse
         getTicketById(input: GetTicketByIdInput): TicketWithComments
     }
 

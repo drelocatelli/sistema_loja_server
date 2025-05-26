@@ -41,15 +41,13 @@ module.exports = {
                 }
             };
         }),
-        getTicketsCustomerLoggedIn: customerAuthMiddleware(async(_, {page = 1, pageSize = 7, orderBy = 'createdAt', orderType = 'ASC'}, context) => {
+        getTicketsCustomerLoggedIn: customerAuthMiddleware(async(_, {page = 1, pageSize = 7, orderBy = 'createdAt', orderType = 'ASC', status}, context) => {
             const props = getPropsResponse({
                 orderBy,
                 orderType,
                 page,
                 pageSize
             });
-
-            console.log(orderBy, orderType)
 
             props.where = {
                 ...props.where,
@@ -67,6 +65,10 @@ module.exports = {
                     required: true
                 }
             ];
+
+            if(status) {
+                props.where.status = status;
+            }
 
             props.include = include;
 
