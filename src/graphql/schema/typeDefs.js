@@ -235,6 +235,21 @@ const typeDefs = gql `
         fechado
     }
 
+    type FavoriteProduct {
+        id: ID!
+        productId: ID!
+        clientId: ID!
+        product: Product
+        client: Client
+        createdAt: String!
+        updatedAt: String!
+    }
+
+    type FavoriteProductsResponse {
+        favoriteProducts: [FavoriteProduct]
+        pagination: PaginationInfo
+    }
+
     input ProductInput {
         name: String!
         description: String
@@ -311,6 +326,10 @@ const typeDefs = gql `
         content: String!
     }
 
+    input FavoriteProductInput {
+        productId: ID!
+    }
+
     type Query {
         getColaborators(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, isAssigned: Boolean, showAll: Boolean): ColaboratorResponse
         getColaborator(id: ID!): Colaborator
@@ -335,6 +354,8 @@ const typeDefs = gql `
         getTickets(page: Int, pageSize: Int): TicketsResponse
         getTicketsCustomerLoggedIn(page: Int, pageSize: Int, orderBy: String, orderType: String, status: TicketStatus): TicketsResponse
         getTicketById(input: GetTicketByIdInput): TicketWithComments
+
+        getFavoriteProducts(page: Int, pageSize: Int): FavoriteProductsResponse
     }
 
     type Mutation {
@@ -368,6 +389,9 @@ const typeDefs = gql `
         updateTicketStatus(input: TicketUpdateInput!): Ticket
         createTicket(input: TicketInput!): Ticket
         createTicketComment(input: TicketCommentInput!): ClientComment
+
+        createFavoriteProduct(input: FavoriteProductInput!): FavoriteProduct
+        deleteFavoriteProduct(id: ID!): String
     }
 `;
 

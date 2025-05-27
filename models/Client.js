@@ -77,6 +77,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             as: 'comments'
         });
+
+        Client.hasMany(models.favorite_products, {
+            foreignKey: 'clientId',
+        });
     }
 
 
