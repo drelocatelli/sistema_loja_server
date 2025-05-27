@@ -52,6 +52,23 @@ module.exports = {
         clientId,
       };
 
+    const product = await models.products.findByPk(productId);
+    
+    if (!product) {
+      throw new Error('Produto nao encontrado');
+    }
+
+    const existingFavorite = await models.favorite_products.findOne({
+        where: {
+          clientId: clientId,
+          productId: productId
+        }
+      });
+
+      if (existingFavorite) {
+        throw new Error('Produto já está favoritado por este cliente.');
+      }
+      
       const favoriteProduct = await models.favorite_products.create(payload);
       const favoriteProductRes = await models.favorite_products.findByPk(favoriteProduct.id, {
         include: [
