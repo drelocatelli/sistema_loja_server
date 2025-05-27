@@ -40,6 +40,25 @@ module.exports = {
                 pageSize: pageSize
             }
         }
+    }),
+    getProductsFavoritedByIds: customerAuthMiddleware(async (_, { ids }, context) => {
+      const clientId = context.customerLoggedIn.id;
+      
+      const query = await models.favorite_products.findAll({
+        where: {
+          clientId,
+          productId: {
+            [Op.in]: ids
+          }
+        }
+      });
+      
+      if(!query) {
+        throw new Error('Nenhum produto favoritado encontrado');
+      }
+      
+      return query;
+
     })
   },
   Mutation: {
@@ -66,7 +85,8 @@ module.exports = {
       });
 
       if (existingFavorite) {
-        throw new Error('Produto já está favoritado por este cliente.');
+        await existingFavorite.destroy();
+        return false;
       }
       
       const favoriteProduct = await models.favorite_products.create(payload);
@@ -85,7 +105,7 @@ module.exports = {
         ],
       });
 
-      return favoriteProductRes;
+      return true;
     }),
     deleteFavoriteProduct: customerAuthMiddleware(async (_, { id }, context) => {
       const favoriteProduct = await models.favorite_products.findByPk(id);

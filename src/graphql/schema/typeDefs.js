@@ -250,6 +250,12 @@ const typeDefs = gql `
         pagination: PaginationInfo
     }
 
+    type FavoritedProduct {
+        id: ID!
+        productId: ID!
+        clientId: ID
+    }
+
     input ProductInput {
         name: String!
         description: String
@@ -356,6 +362,8 @@ const typeDefs = gql `
         getTicketById(input: GetTicketByIdInput): TicketWithComments
 
         getFavoriteProducts(page: Int, pageSize: Int): FavoriteProductsResponse
+        getFavoriteProductsById(id: ID!): FavoriteProduct
+        getProductsFavoritedByIds(ids: [ID!]!): [FavoritedProduct]
     }
 
     type Mutation {
@@ -390,7 +398,7 @@ const typeDefs = gql `
         createTicket(input: TicketInput!): Ticket
         createTicketComment(input: TicketCommentInput!): ClientComment
 
-        createFavoriteProduct(input: FavoriteProductInput!): FavoriteProduct
+        createFavoriteProduct(input: FavoriteProductInput!): Boolean
         deleteFavoriteProduct(id: ID!): String
     }
 `;
