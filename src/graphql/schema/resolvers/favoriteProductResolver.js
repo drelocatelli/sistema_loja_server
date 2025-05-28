@@ -16,7 +16,13 @@ module.exports = {
             {
                 model: models.products,
                 as: 'product',
-                required: true
+                required: true,
+                where: {
+                  is_published: true
+                },
+                orderBy: [
+                  ['created_at', 'DESC']
+                ]
             },
             {
                 model: models.clients,
@@ -96,6 +102,12 @@ module.exports = {
             model: models.products,
             as: 'product',
             required: true,
+            where: {
+              is_published: true
+            },
+            orderBy: [
+              ['created_at', 'DESC']
+            ]
           },
           {
             model: models.clients,
