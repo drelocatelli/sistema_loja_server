@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const customerAuthMiddleware = require('../../../middlewares/customerMiddleware');
 const models = require('../../../../models');
-const { getPropsResponse } = require('../../../utils');
+const { getPropsResponse, getImagesFromFolder } = require('../../../utils');
 
 module.exports = {
   Query: {
@@ -20,6 +20,11 @@ module.exports = {
                 where: {
                   is_published: true
                 },
+                include: [
+                  {
+                    model: models.categories,
+                  }
+                ],
                 orderBy: [
                   ['created_at', 'DESC']
                 ]
@@ -33,7 +38,17 @@ module.exports = {
 
         props.include = include;
 
-        const {count, rows} = await models.favorite_products.findAndCountAll(props);
+        let {count, rows} = await models.favorite_products.findAndCountAll(props);
+
+        rows = await Promise.all(rows.map(async (favorite) => {
+          const product = favorite.product;
+      
+          product.photos = await getImagesFromFolder(product.id, 'products');
+      
+          return favorite;
+      }));
+      
+      
 
         const totalPages = Math.ceil(count / pageSize);
 
