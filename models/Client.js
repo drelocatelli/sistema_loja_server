@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         email: {
             type: Sequelize.STRING,
-            allowNull: true
+            allowNull: true,
+            get() {
+                const rawValue = this.getDataValue('email');
+                return rawValue.substring(0, 5) + '...';
+            }
         },
         rg: {
             type: Sequelize.STRING,
@@ -57,6 +61,9 @@ module.exports = (sequelize, DataTypes) => {
         createdAt: 'created_at',
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
+        // defaultScope: {
+        //     attributes: { exclude: ['email'] }
+        // }
     });
 
     Client.associate = function(models) {
