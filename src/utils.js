@@ -94,7 +94,6 @@ const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = 
 }
 
 function hideMail(email) {
-  let mail = email.split("@");
   let [usuario, dominio] = email.split("@");
   let visiveis;
 
