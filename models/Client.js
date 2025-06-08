@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+const { hideMail } = require("../src/utils");
 module.exports = (sequelize, DataTypes) => {
 
     const Client = sequelize.define('clients', {
@@ -17,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             get() {
                 const rawValue = this.getDataValue('email');
-                return rawValue.substring(0, 5) + '...';
+                return hideMail(rawValue);
             }
         },
         rg: {

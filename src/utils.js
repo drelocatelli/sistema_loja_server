@@ -93,4 +93,30 @@ const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = 
   
 }
 
-module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder, getPropsResponse };
+function hideMail(email) {
+  let mail = email.split("@");
+  let [usuario, dominio] = email.split("@");
+  let visiveis;
+
+  if(!dominio) {
+    dominio = '';
+  }
+
+  if (usuario.length <= 2) {
+    visiveis = 1;
+  } else if (usuario.length <= 6) {
+    visiveis = 2;
+  } else {
+    visiveis = Math.floor(usuario.length / 2);
+
+  }
+
+
+  const parteVisivel = usuario.slice(0, visiveis);
+  const parteOculta = '*'.repeat(usuario.length - visiveis);
+
+  return `${parteVisivel}${parteOculta}${dominio ? '@' + dominio : ''}`;
+}
+
+
+module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder, getPropsResponse, hideMail };
