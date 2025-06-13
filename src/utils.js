@@ -1,5 +1,6 @@
   const fs = require('fs');
   const path = require('path');
+  const { Op } = require("sequelize");
 
 const checkEntityExists = async (entity, entityName) => {
     if (!entity) {
@@ -85,9 +86,13 @@ const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = 
   if(searchTerm && searchTerm.length != 0) {
     condition.name = {[Op.like] : `%${searchTerm}%`};
   }
-  if(deleted) {
+  if(deleted === true) {
     condition.deleted_at = {[Op.ne] : null};
+  } else {
+    condition.deleted_at = null;
   }
+
+  
   props.where = condition;
   return props;
   
