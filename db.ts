@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize');
-const { config } = require('dotenv');
-const mysql = require('mysql2');
+import { Sequelize } from 'sequelize';
+import { config } from 'dotenv';
+import mysql from 'mysql2';
 
 config(); // Carrega variáveis de ambiente
 

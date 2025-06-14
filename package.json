@@ -6,16 +6,23 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
+    "start": "NODE_ENV=production node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only --watch index.ts",
+    "migrate": "sequelize db:migrate",
+    "migrate:undo": "sequelize db:migrate:undo",
+    "migrate:undo:all": "sequelize db:migrate:undo:all",
+    "migrate:create": "sequelize migration:create --name",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:watch": "nodemon -r dotenv/config index.js",
-    "start:dev": "node -r dotenv/config index.js",
-    "start": "node index.js"
+    "start:dev": "node -r dotenv/config index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
+    "@types/dotenv": "^8.2.3",
+    "@types/multer": "^1.4.13",
     "@types/node": "^24.0.1",
     "apollo-server": "^3.13.0",
     "apollo-server-express": "^3.13.0",

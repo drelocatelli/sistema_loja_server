@@ -1,27 +1,25 @@
-const { Sequelize } = require("sequelize");
-
-module.exports = (sequelize, DataTypes) => {
+const module = (sequelize, DataTypes) => {
     const Category = sequelize.define('categories', {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false
         },
         name: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         created_at: {
-            type: Sequelize.DATE,
+            type: DataTypes.DATE,
             allowNull: false
         },
         updated_at: {
-            type: Sequelize.DATE,
+            type: DataTypes.DATE,
             allowNull: false
         },
         deleted_at: {
-            type: Sequelize.DATE,
+            type: DataTypes.DATE,
             allowNull: true
         }
     },
@@ -35,3 +33,5 @@ module.exports = (sequelize, DataTypes) => {
 
     return Category;
 };
+
+export default module;

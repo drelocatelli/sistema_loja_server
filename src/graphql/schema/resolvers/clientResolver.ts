@@ -1,6 +1,6 @@
-const { Op } = require('sequelize');
-const authMiddleware = require('../../../middlewares/loginMiddleware');
-const models = require('../../../../models');
+import { Op } from 'sequelize';
+import authMiddleware from '@middlewares/loginMiddleware';
+import models from '@models';
 
 
 module.exports = {
@@ -61,6 +61,10 @@ module.exports = {
                 throw new Error('Usuário não autenticado!');
             }
 
+            if (!address || typeof address !== 'string') {
+                throw new Error('Endereço inválido!');
+            }
+
             const newClient = await models.clients.create({
                 name,
                 email,
@@ -73,7 +77,6 @@ module.exports = {
                 state,
                 country
             });
-
 
             return newClient;
         }),

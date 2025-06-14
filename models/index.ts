@@ -1,11 +1,17 @@
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
+import fs from 'fs';
+import path from 'path';
+import {Sequelize, DataTypes} from 'sequelize';
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.js')[env];
 
-const db = {};
+interface Db {
+  sequelize?: Sequelize;
+  Sequelize?: typeof Sequelize;
+  [key: string]: any;
+}
+
+const db: Db = {};
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 fs.readdirSync(__dirname)
@@ -18,7 +24,7 @@ fs.readdirSync(__dirname)
   })
   .forEach(file => {
     const modelFunc = require(path.join(__dirname, file));
-    const model = modelFunc(sequelize, Sequelize.DataTypes);
+    const model = modelFunc(sequelize, DataTypes);
     if(model) {
       db[model.name] = model;
     }

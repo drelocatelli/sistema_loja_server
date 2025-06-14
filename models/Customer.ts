@@ -1,18 +1,18 @@
-const {Sequelize} = require('sequelize');
+import { DataTypes } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
+const module = (sequelize, DataTypes) => {
     const Customer = sequelize.define('customers', {
         id: {
-            type: Sequelize.BIGINT,
+            type: DataTypes.BIGINT,
             primaryKey: true, 
             autoIncrement: true,
         },
         password: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false,
         },
         clientId: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: 'clients',
@@ -34,3 +34,5 @@ module.exports = (sequelize, DataTypes) => {
     return Customer;
     
 };
+
+export default module;

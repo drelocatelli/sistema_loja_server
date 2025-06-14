@@ -1,29 +1,29 @@
-const {Sequelize} = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
-    const Product = sequelize.define('products', {
-        name: {
+const module = (sequelize, DataTypes) => {
+    const Sale = sequelize.define('sales', {
+        serial: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        product_id: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         description: {
             type: DataTypes.STRING,
             allowNull: true
         },
-        category_id: {
+        client_id: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        price: {
+        colaborator_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        total: {
             type: DataTypes.FLOAT,
-            allowNull: false
-        },
-        quantity: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        is_published: {
-            type: DataTypes.BOOLEAN,
             allowNull: false
         },
         created_at: {
@@ -46,10 +46,12 @@ module.exports = (sequelize, DataTypes) => {
         deletedAt: 'deleted_at',
     });
 
-    Product.associate = (models) => {
-        Product.belongsTo(models.categories, { foreignKey: 'category_id' });
-        Product.hasMany(models.favorite_products, { foreignKey: 'productId' });
-    }
+    Sale.associate = (models) => {
+        Sale.belongsTo(models.clients, { foreignKey: 'client_id' });
+        Sale.belongsTo(models.colaborator, { foreignKey: 'colaborator_id' });
+        Sale.belongsTo(models.products, { foreignKey: 'product_id' });
+    };
 
-    return Product;
+    return Sale;
 }
+export default module;

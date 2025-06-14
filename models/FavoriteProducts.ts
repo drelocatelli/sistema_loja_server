@@ -1,6 +1,6 @@
-const {Sequelize, DataTypes} = require('sequelize');
+import { Sequelize, DataTypes } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
+const module = (sequelize, DataTypes) => {
     const FavoriteProduct = sequelize.define('favorite_products', {
         id: {
             type: DataTypes.INTEGER,
@@ -38,3 +38,5 @@ module.exports = (sequelize, DataTypes) => {
 
     return FavoriteProduct;
 };
+
+export default module;

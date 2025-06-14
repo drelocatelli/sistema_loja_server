@@ -1,9 +1,9 @@
-const {Sequelize} = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
+const module = (sequelize, DataTypes) => {
     const Login = sequelize.define('login', {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false
@@ -45,3 +45,4 @@ module.exports = (sequelize, DataTypes) => {
 }
 
 
+export default module;

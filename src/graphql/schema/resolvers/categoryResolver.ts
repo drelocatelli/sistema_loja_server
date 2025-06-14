@@ -1,6 +1,6 @@
-const authMiddleware = require('../../../middlewares/loginMiddleware');
-const { Op } = require('sequelize');
-const models = require('../../../../models');
+import authMiddleware from '../../../middlewares/loginMiddleware';
+import { Op } from 'sequelize';
+import models from '../../../../models';
 
 module.exports = {
     Query: {

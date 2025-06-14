@@ -1,20 +1,20 @@
-const { Sequelize } = require("sequelize");
-const { hideMail } = require("../src/utils");
-module.exports = (sequelize, DataTypes) => {
+import { Sequelize } from "sequelize";
+import { hideMail } from "../src/utils";
+const module = (sequelize, DataTypes) => {
 
     const Client = sequelize.define('clients', {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
             allowNull: false
         },
         name: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
         email: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true,
             get() {
                 const rawValue = this.getDataValue('email');
@@ -22,39 +22,39 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         rg: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         cpf: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         phone: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         address: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         cep: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         city: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         state: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         country: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: true
         },
         deleted_at: {
-            type: Sequelize.DATE,
+            type: DataTypes.DATE,
             allowNull: true
         }
     }, {
@@ -94,3 +94,5 @@ module.exports = (sequelize, DataTypes) => {
 
     return Client;
 };
+
+export default module;

@@ -1,6 +1,6 @@
-const {Sequelize} = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
+const module = (sequelize, DataTypes) => {
     const Colaborator = sequelize.define('colaborator', {
         id: {
             type: DataTypes.INTEGER,
@@ -70,3 +70,5 @@ module.exports = (sequelize, DataTypes) => {
     }
     return Colaborator;
 }
+
+export default module;

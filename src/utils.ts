@@ -1,18 +1,18 @@
-  const fs = require('fs');
-  const path = require('path');
-  const { Op } = require("sequelize");
+  import fs from 'fs';
+  import path from 'path';
+  import { Op } from "sequelize";
 
-const checkEntityExists = async (entity, entityName) => {
+const checkEntityExists = async (entity: any, entityName: string) => {
     if (!entity) {
       throw new Error(`${entityName} não encontrado`);
     }
   };
   
-  const findImageByName = (imageName, dirPath) => {
+  const findImageByName = (imageName: string, dirPath: string) => {
     return new Promise((resolve, reject) => {
       fs.readdir(dirPath, (err, files) => {
         if (err) {
-          reject('Unable to scan directory:', err);
+          reject('Unable to scan directory:');
           return;
         }
   
@@ -47,7 +47,7 @@ const checkEntityExists = async (entity, entityName) => {
     return dir;
   };
   
-const getImagesFromFolder = async (itemId, folder) => {
+const getImagesFromFolder = async (itemId: string | number, folder: string) => {
   const dirPath = path.join(findRootPath(), 'public', 'uploads', 'imgs', folder, itemId.toString());
 
   if(!fs.existsSync(dirPath)) {
@@ -72,7 +72,26 @@ const getImagesFromFolder = async (itemId, folder) => {
   })
 }
 
-const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC'} = {}) => {
+enum OrderByEnum {
+  createdAt = 'created_at',
+  updatedAt = 'updated_at'
+}
+
+enum OrderTypeEnum {
+  asc = 'ASC',
+  desc = 'desc'
+}
+
+interface PropsResponse {
+  page?: number,
+  pageSize?: number,
+  searchTerm?: string | null,
+  deleted?: boolean,
+  orderBy?: OrderByEnum | null,
+  orderType?: OrderTypeEnum | null
+}
+
+const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = OrderByEnum.createdAt, orderType = OrderTypeEnum.asc}: PropsResponse ) => {
   const offset = (page - 1) * pageSize;
 
   const props = {
@@ -81,11 +100,14 @@ const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = 
     offset,
   }
 
-  const condition = {};
+  const condition: {
+    name?: { [key: symbol]: string } | null,
+    deleted_at?: { [key: symbol]: any } | null
+  } = {};
 
-  if(searchTerm && searchTerm.length != 0) {
-    condition.name = {[Op.like] : `%${searchTerm}%`};
-  }
+  condition.name = { [Op.like]: `%${searchTerm}%` };
+
+  //@ts-ignore
   if(deleted === true) {
     condition.deleted_at = {[Op.ne] : null};
   } else {
@@ -93,12 +115,12 @@ const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = 
   }
 
   
-  props.where = condition;
+  (props as any).where = condition;
   return props;
   
 }
 
-function hideMail(email) {
+function hideMail(email: string) {
   let [usuario, dominio] = email.split("@");
   let visiveis;
 

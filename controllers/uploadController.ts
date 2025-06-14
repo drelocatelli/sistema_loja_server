@@ -1,11 +1,11 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const { findImageByName } = require('../src/utils');
-const authMiddlewareExpress = require('../src/middlewares/loginExpressMiddleware');
-const cors = require('cors');
-const authCustomerMiddlewareExpress = require('../src/middlewares/customerExpressMiddleware');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { findImageByName } from '@utils';
+import authMiddlewareExpress from '@middlewares/loginExpressMiddleware';
+import cors from 'cors';
+import authCustomerMiddlewareExpress from '@middlewares/customerExpressMiddleware';
 
 const uploadEndpoint = './public/uploads';
 

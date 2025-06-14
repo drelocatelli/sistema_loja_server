@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+const module = (sequelize, DataTypes) => {
     const Ticket = sequelize.define('tickets', {  // Nome do model com inicial maiúscula e singular
       id: {
         type: DataTypes.INTEGER,   // Use DataTypes
@@ -65,3 +65,4 @@ module.exports = (sequelize, DataTypes) => {
     return Ticket;
   };
   
+  export default module;
