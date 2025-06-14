@@ -17,6 +17,11 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
     props.include = [
         {model: models.categories},
     ];
+
+    props.where = {
+        ...props.where,
+        is_published: true
+    }
     
     let {count, rows} = await models.products.findAndCountAll(props);
 

@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:watch": "nodemon -r dotenv/config index.js",
     "start:dev": "node -r dotenv/config index.js",
@@ -15,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
+    "@types/node": "^24.0.1",
     "apollo-server": "^3.13.0",
     "apollo-server-express": "^3.13.0",
     "bcrypt": "^5.1.1",
@@ -30,6 +32,8 @@
     "sequelize": "^6.37.5"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
   }
 }
