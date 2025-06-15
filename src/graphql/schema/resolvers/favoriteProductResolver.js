@@ -12,6 +12,10 @@ module.exports = {
         pageSize,
       });
 
+      props.where = {
+        ...props.where,
+      }
+
       const include = [
         {
           model: models.products,
@@ -19,6 +23,7 @@ module.exports = {
           required: true,
           where: {
             is_published: true,
+            deleted_at: {[Op.eq]:null}
           },
           include: [
             {
@@ -47,6 +52,8 @@ module.exports = {
           return favorite;
         })
       );
+
+      console.log(rows)
 
       const totalPages = Math.ceil(count / pageSize);
 

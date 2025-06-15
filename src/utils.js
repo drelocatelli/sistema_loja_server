@@ -72,7 +72,7 @@ const getImagesFromFolder = async (itemId, folder) => {
   })
 }
 
-const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC'} = {}) => {
+const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = false, hasDeleted = false, orderBy = 'created_at', orderType = 'ASC'} = {}) => {
   const offset = (page - 1) * pageSize;
 
   const props = {
@@ -88,10 +88,9 @@ const getPropsResponse = ({page = 1, pageSize = 7, searchTerm = null, deleted = 
   }
   if(deleted === true) {
     condition.deleted_at = {[Op.ne] : null};
-  } else {
-    condition.deleted_at = null;
+  } else if(hasDeleted) {
+    condition.deleted_at = {[Op.eq] : null};
   }
-
   
   props.where = condition;
   return props;

@@ -1,4 +1,3 @@
-const { Op } = require("sequelize");
 const authMiddleware = require("../../../middlewares/loginMiddleware");
 const { checkEntityExists, getImagesFromFolder, getPropsResponse } = require("../../../utils");
 const models = require('../../../../models');
@@ -12,6 +11,7 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
         deleted,
         orderBy,
         orderType,
+        hasDeleted: true,
     });
 
     props.include = [
@@ -20,7 +20,7 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
 
     props.where = {
         ...props.where,
-        is_published: true
+        is_published: true,
     }
     
     let {count, rows} = await models.products.findAndCountAll(props);
