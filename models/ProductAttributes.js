@@ -1,4 +1,3 @@
-const models = require("../models")
 
 module.exports = (sequelize, DataTypes) => {
     const ProductAttributes = sequelize.define('ProductAttribute', {
@@ -26,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         timestamps: false,
+        tableName: 'product_attributes'
     });
 
     return ProductAttributes;

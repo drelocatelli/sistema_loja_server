@@ -59,31 +59,35 @@ module.exports = (sequelize, DataTypes) => {
   Product.associate = (models) => {
     Product.belongsTo(models.categories, { foreignKey: 'category_id' });
     Product.hasMany(models.favorite_products, { foreignKey: 'productId' });
-    Product.belongsToMany(models.Attribute, {
-      through: 'ProductAttribute',
-      foreignKey: 'product_id',
-      otherKey: 'attribute_id',
-      as: 'attributes',
-    });
-  };
 
-  Product.addScope('withAttributes', {
-    include: [
-      {
-        model: models.Attribute,
-        as: "attributes",
-        include: [
-          {
-            model: models.AttributeValue,
-            as: "values"
-          },
-        ],
-        through: {
-          attributes: [], // não traz campos da pivot
-        },
+    Product.belongsToMany(models.AttributeValue, {
+      through: {
+        model: models.ProductAttribute,
+        attributes: [],
       },
-    ],
-  });
+      foreignKey: 'product_id',
+      otherKey: 'attribute_value_id',
+      as: 'attributeValues',
+    });
+
+  };
+  // Product.addScope('withAttributes', {
+  //   include: [
+  //     {
+  //       model: models.Attribute,
+  //       include: [
+  //         {
+  //           model: models.AttributeValue,
+  //           as: "attribute_values",
+  //         },
+  //       ],
+  //       through: {
+  //         attributes: [], // não traz campos da pivot
+  //       },
+  //     },
+  //   ],
+  // });
+
 
   return Product;
 };

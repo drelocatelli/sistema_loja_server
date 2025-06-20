@@ -16,6 +16,7 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
 
     props.include = [
         {model: models.categories},
+        {model: models.AttributeValue, as: 'attributeValues', include: [{model: models.Attribute, as: 'attribute'}]},
     ];
 
     props.where = {
@@ -23,7 +24,9 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
         is_published: true, 
     }
 
-    let {count, rows} = await models.products.scope('withAttributes').findAndCountAll(props);
+    let {count, rows} = await models.products.findAndCountAll(props);
+
+    console.log(rows[0])
 
     const totalPages = Math.ceil(count / pageSize);
 

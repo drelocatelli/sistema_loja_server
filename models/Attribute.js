@@ -14,10 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         timestamps: false,
+        tableName: 'attributes'
     })
 
     Attribute.associate = (models) => {
-         Attribute.hasMany(models.AttributeValue, { foreignKey: "attribute_id" });
+        Attribute.hasMany(models.AttributeValue, { foreignKey: 'attribute_id', as: 'values' });
      }
     return Attribute;
 }

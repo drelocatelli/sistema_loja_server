@@ -23,19 +23,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
+      tableName: 'attribute_values'
     }
   );
 
   AttributeValue.associate = (models) => {
-    AttributeValue.belongsTo(models.Attribute, {
-      foreignKey: 'attribute_id',
-    });
+    AttributeValue.belongsTo(models.Attribute, { foreignKey: 'attribute_id', as: 'attribute' });
 
-    AttributeValue.belongsToMany(models.products, {
-      through: 'product_attributes',
-      foreignKey: 'attribute_value_id',
-      otherKey: 'product_id',
-    });
   };
 
   return AttributeValue;
