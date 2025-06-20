@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
         timestamps: false,
+        tableName: 'order_product_variations',
     });
 
     OrderProductVariation.associate = (models) => {
