@@ -60,14 +60,11 @@ module.exports = (sequelize, DataTypes) => {
     Product.belongsTo(models.categories, { foreignKey: 'category_id' });
     Product.hasMany(models.favorite_products, { foreignKey: 'productId' });
 
-    Product.belongsToMany(models.AttributeValue, {
-      through: {
-        model: models.ProductAttribute,
-        attributes: [],
-      },
+    Product.belongsToMany(models.Attribute, {
+      through: models.ProductAttribute,
       foreignKey: 'product_id',
       otherKey: 'attribute_value_id',
-      as: 'attributeValues',
+      as: 'attributes',
     });
 
   };

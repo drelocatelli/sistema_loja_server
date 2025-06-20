@@ -260,7 +260,7 @@ const typeDefs = gql `
     type Attribute {
         id: ID!
         name: String
-        attribute_values: [AttributeValue]
+        values: [AttributeValue]
     }
 
     type AttributeValue {
