@@ -20,17 +20,20 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
 
     props.where = {
         ...props.where,
-        is_published: true,
+        is_published: true, 
     }
-    
-    let {count, rows} = await models.products.findAndCountAll(props);
+
+    let {count, rows} = await models.products.scope('withAttributes').findAndCountAll(props);
 
     const totalPages = Math.ceil(count / pageSize);
 
-    rows = rows.map(async (product) => { 
-        product['photos'] = await getImagesFromFolder(product.id, 'products');
-        return product; 
-    })
+    rows = await Promise.all(
+        rows.map(async (product) => {
+            product['photos'] = await getImagesFromFolder(product.id, 'products');
+            return product;
+        })
+    );
+
 
     const data = {
         products: rows,

@@ -153,6 +153,7 @@ const typeDefs = gql `
         price: Float!
         quantity: Int!
         is_published: Boolean!
+        attributes: [Attribute]
         deleted_at: String
         created_at: String
         updated_at: String
@@ -256,6 +257,25 @@ const typeDefs = gql `
         clientId: ID
     }
 
+    type Attribute {
+        id: ID!
+        name: String
+        attribute_values: [AttributeValue]
+    }
+
+    type AttributeValue {
+        id: ID!
+        value: String!
+        attribute_id: ID!
+        attribute: Attribute
+    }
+
+    type ProductAttribute {
+        id: ID!
+        product_id: ID!
+        attribute_value_id: ID!
+    }
+
     input ProductInput {
         name: String!
         description: String
@@ -350,8 +370,8 @@ const typeDefs = gql `
         getAllCategories(deleted: Boolean): [Category]
         getCategory(id: ID!): Category
 
-        getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, orderBy: String, orderType: String, onlyPublished: Boolean): ProductsResponse
-        getPublicProducts(page: Int, pageSize: Int, searchTerm: String, orderBy: String, orderType: String): ProductsResponse
+        getProducts(page: Int, pageSize: Int, searchTerm: String, deleted: Boolean, orderBy: String, orderType: String, onlyPublished: Boolean, categoriesId: [ID]): ProductsResponse
+        getPublicProducts(page: Int, pageSize: Int, searchTerm: String, orderBy: String, orderType: String, categoriesId: [ID]): ProductsResponse
         getProduct(id: ID!): Product
 
         loginCustomer(email: String! password: String!): CustomerLogin
