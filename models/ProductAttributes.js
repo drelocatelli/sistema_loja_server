@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'attribute_values',
                 key: 'id'
             }
+        },
+        quantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         }
     }, {
         timestamps: false,
