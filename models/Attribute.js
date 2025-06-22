@@ -18,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     })
 
     Attribute.associate = (models) => {
-        Attribute.hasMany(models.AttributeValue, { foreignKey: 'attribute_id', as: 'values' });
+        Attribute.hasMany(models.AttributeValue, {
+            foreignKey: 'attribute_id',
+            as: 'values'
+        });
      }
     return Attribute;
 }

@@ -1,137 +1,167 @@
-const authMiddleware = require("../../../middlewares/loginMiddleware");
-const { checkEntityExists, getImagesFromFolder, getPropsResponse } = require("../../../utils");
+const authMiddleware = require('../../../middlewares/loginMiddleware');
+const { checkEntityExists, getImagesFromFolder, getPropsResponse, formatProductAttributes } = require('../../../utils');
 const models = require('../../../../models');
 
-async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false, categoriesId = []}) {
+async function getProducts(
+  _,
+  {
+    page = 1,
+    pageSize = 7,
+    searchTerm = null,
+    deleted = false,
+    orderBy = 'created_at',
+    orderType = 'ASC',
+    onlyPublished = false,
+    categoriesId = [],
+  }
+) {
+  const props = getPropsResponse({
+    page,
+    pageSize,
+    searchTerm,
+    deleted,
+    orderBy,
+    orderType,
+    hasDeleted: true,
+  });
 
-    
-    const props = getPropsResponse({
-        page,
-        pageSize,
-        searchTerm,
-        deleted,
-        orderBy,
-        orderType,
-        hasDeleted: true,
-    });
+  props.include = [
+    { model: models.categories },
+    { model: models.Attribute, as: 'attributes', include: [{ model: models.AttributeValue, as: 'values' }] },
+  ];
 
-    props.include = [
-        {model: models.categories},
-        {model: models.Attribute, as: 'attributes', include: [{model: models.AttributeValue, as: 'values'}]},
-    ];
+  props.where = {
+    ...props.where,
+    is_published: true,
+  };
 
-    props.where = {
-        ...props.where,
-        is_published: true, 
-    }
+  if (categoriesId.length > 0) {
+    props.where.category_id = {
+      [models.Sequelize.Op.in]: categoriesId,
+    };
+  }
 
-    if (categoriesId.length > 0) {
-        props.where.category_id = {
-            [models.Sequelize.Op.in]: categoriesId
-        }
-    }
+  let { count, rows } = await models.products.findAndCountAll(props);
 
-    let {count, rows} = await models.products.findAndCountAll(props);
+  const totalPages = Math.ceil(count / pageSize);
 
-    const totalPages = Math.ceil(count / pageSize);
+  rows = await Promise.all(
+    rows.map(async (product) => {
+      product['photos'] = await getImagesFromFolder(product.id, 'products');
+      return product;
+    })
+  );
 
-    rows = await Promise.all(
-        rows.map(async (product) => {
-            product['photos'] = await getImagesFromFolder(product.id, 'products');
-            return product;
-        })
-    );
+  const data = {
+    products: rows,
+    pagination: {
+      totalRecords: count,
+      totalPages: totalPages,
+      currentPage: page,
+      pageSize: pageSize,
+    },
+  };
 
-
-    const data = {
-        products: rows,
-        pagination: {
-            totalRecords: count,
-            totalPages: totalPages,
-            currentPage: page,
-            pageSize: pageSize
-        }
-    }
-    
-    return data; 
+  return data;
 }
 
 module.exports = {
-    Query: {
-        getProducts: authMiddleware(async (_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) => {
-            const data = await getProducts(_, {page, pageSize, searchTerm, deleted, orderBy, orderType, onlyPublished});
-            return data; 
-        }),
-        getPublicProducts: async (_, {page = 1, pageSize = 7, searchTerm = null, orderBy = 'created_at', orderType = 'ASC', categoriesId = []}) => {
-            const data = await getProducts(_, {page, pageSize, searchTerm, orderBy, deleted: false, orderType, onlyPublished: true, categoriesId});
-            return data;
-        },
-        getProduct: (async (_, {id}) => {
-            const data =  await models.products.findByPk(id, {
-                include: [
-                    {model: models.categories},
-                    {model: models.Attribute, as: 'attributes', include: [{model: models.AttributeValue, as: 'values'}]},
-                ]
-            });
-
-            data['photos'] = await getImagesFromFolder(data.id, 'products');
-
-
-            return data;
-        })
+  Query: {
+    getProducts: authMiddleware(
+      async (
+        _,
+        { page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false }
+      ) => {
+        const data = await getProducts(_, { page, pageSize, searchTerm, deleted, orderBy, orderType, onlyPublished });
+        return data;
+      }
+    ),
+    getPublicProducts: async (
+      _,
+      { page = 1, pageSize = 7, searchTerm = null, orderBy = 'created_at', orderType = 'ASC', categoriesId = [] }
+    ) => {
+      const data = await getProducts(_, {
+        page,
+        pageSize,
+        searchTerm,
+        orderBy,
+        deleted: false,
+        orderType,
+        onlyPublished: true,
+        categoriesId,
+      });
+      return data;
     },
+    getProduct: async (_, { id }) => {
+      let data = await models.products.findByPk(id, {
+        include: [
+          { model: models.categories, as: 'category' },
+          {
+            model: models.ProductAttributes,
+            as: 'productAttributes',
+            include: [
+              {
+                model: models.AttributeValue,
+                as: 'value',
+                include: [{ model: models.Attribute, as: 'attribute' }],
+              },
+            ],
+          },
+        ],
+      });
 
-    Mutation: {
-        createProduct: authMiddleware(async (_, {input}) => {
-            const category = await models.categories.findByPk(input.category_id);
+      data = data.toJSON(); // <-- importante!
+      data = formatProductAttributes(data);
 
-            await checkEntityExists(category, 'Categoria');
+      //   data['photos'] = await getImagesFromFolder(data.id, 'products');
 
-            const productRequest = await models.products.create(input);
-            const product = await models.products.findByPk(productRequest.id, {
-                include: [
-                    {model: models.categories},
-                ]
-            })
+      return data;
+    },
+  },
 
-            return product;
-        }),
-        updateProduct: authMiddleware(async (_, {input}) => {
-            
-            const product = await models.products.findByPk(input.id, {
-                include: [
-                    {model: Category},
-                ]
-            });
+  Mutation: {
+    createProduct: authMiddleware(async (_, { input }) => {
+      const category = await models.categories.findByPk(input.category_id);
 
-            await checkEntityExists(product, 'Produto');    
+      await checkEntityExists(category, 'Categoria');
 
-            product.name = input.name || product.name;
-            product.description = input.description || product.description;
-            product.category_id = input.category_id || product.category_id;
-            product.price = input.price || product.price;
-            product.quantity = input.quantity || product.quantity;
-            product.is_published = input.is_published || product.is_published;
+      const productRequest = await models.products.create(input);
+      const product = await models.products.findByPk(productRequest.id, {
+        include: [{ model: models.categories }],
+      });
 
-            await product.save();
+      return product;
+    }),
+    updateProduct: authMiddleware(async (_, { input }) => {
+      const product = await models.products.findByPk(input.id, {
+        include: [{ model: Category }],
+      });
 
-            return product;
-        }),
-        deleteProduct: authMiddleware(async (_, {id}) => {
-            const product = await models.products.findByPk(id, {
-                include: [
-                    {model: models.categories},
-                ]
-            });
+      await checkEntityExists(product, 'Produto');
 
-            await checkEntityExists(product, 'Produto');    
+      product.name = input.name || product.name;
+      product.description = input.description || product.description;
+      product.category_id = input.category_id || product.category_id;
+      product.price = input.price || product.price;
+      product.quantity = input.quantity || product.quantity;
+      product.is_published = input.is_published || product.is_published;
 
-            product.deleted_at = new Date();
+      await product.save();
 
-            await product.save();
+      return product;
+    }),
+    deleteProduct: authMiddleware(async (_, { id }) => {
+      const product = await models.products.findByPk(id, {
+        include: [{ model: models.categories }],
+      });
 
-            return `Product with ID ${id} deleted successfully.`;
-            
-        })
-    }
-}
+      await checkEntityExists(product, 'Produto');
+
+      product.deleted_at = new Date();
+
+      await product.save();
+
+      return `Product with ID ${id} deleted successfully.`;
+    }),
+  },
+};

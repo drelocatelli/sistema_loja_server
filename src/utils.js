@@ -121,5 +121,33 @@ function hideMail(email) {
   return `${parteVisivel}${parteOculta}${dominio ? '@' + dominio : ''}`;
 }
 
+function formatProductAttributes(product) {
+  if (!product) return null;
+  const grouped = {};
 
-module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder, getPropsResponse, hideMail };
+  product.productAttributes.forEach((pa) => {
+    const attrId = pa.value.attribute.id;
+    const attrName = pa.value.attribute.name;
+
+    if (!grouped[attrId]) {
+      grouped[attrId] = {
+        id: attrId,
+        name: attrName,
+        values: [],
+      };
+    }
+
+    grouped[attrId].values.push({
+      id: pa.value.id,
+      value: pa.value.value,
+      attribute_id: pa.value.attribute_id,
+      quantity: pa.quantity, // pega quantity do productAttributes
+    });
+  });
+
+  product.attributes = Object.values(grouped);
+  delete product.productAttributes;
+  return product;
+}
+
+module.exports = { checkEntityExists, findImageByName, findRootPath, getImagesFromFolder, getPropsResponse, hideMail, formatProductAttributes };

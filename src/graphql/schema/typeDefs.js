@@ -267,6 +267,7 @@ const typeDefs = gql `
         id: ID!
         value: String!
         attribute_id: ID!
+        quantity: Int
     }
 
     type ProductAttribute {
