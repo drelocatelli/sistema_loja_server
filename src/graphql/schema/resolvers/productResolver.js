@@ -67,11 +67,17 @@ module.exports = {
             return data;
         },
         getProduct: (async (_, {id}) => {
-            return await models.products.findByPk(id, {
+            const data =  await models.products.findByPk(id, {
                 include: [
                     {model: models.categories},
+                    {model: models.Attribute, as: 'attributes', include: [{model: models.AttributeValue, as: 'values'}]},
                 ]
             });
+
+            data['photos'] = await getImagesFromFolder(data.id, 'products');
+
+
+            return data;
         })
     },
 
