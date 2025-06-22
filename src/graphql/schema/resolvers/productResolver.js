@@ -2,8 +2,9 @@ const authMiddleware = require("../../../middlewares/loginMiddleware");
 const { checkEntityExists, getImagesFromFolder, getPropsResponse } = require("../../../utils");
 const models = require('../../../../models');
 
-async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false}) {
+async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, deleted = false, orderBy = 'created_at', orderType = 'ASC', onlyPublished = false, categoriesId = []}) {
 
+    
     const props = getPropsResponse({
         page,
         pageSize,
@@ -22,6 +23,12 @@ async function getProducts(_, {page = 1, pageSize = 7, searchTerm = null, delete
     props.where = {
         ...props.where,
         is_published: true, 
+    }
+
+    if (categoriesId.length > 0) {
+        props.where.category_id = {
+            [models.Sequelize.Op.in]: categoriesId
+        }
     }
 
     let {count, rows} = await models.products.findAndCountAll(props);
@@ -55,8 +62,8 @@ module.exports = {
             const data = await getProducts(_, {page, pageSize, searchTerm, deleted, orderBy, orderType, onlyPublished});
             return data; 
         }),
-        getPublicProducts: async (_, {page = 1, pageSize = 7, searchTerm = null, orderBy = 'created_at', orderType = 'ASC'}) => {
-            const data = await getProducts(_, {page, pageSize, searchTerm, orderBy, deleted: false, orderType, onlyPublished: true});
+        getPublicProducts: async (_, {page = 1, pageSize = 7, searchTerm = null, orderBy = 'created_at', orderType = 'ASC', categoriesId = []}) => {
+            const data = await getProducts(_, {page, pageSize, searchTerm, orderBy, deleted: false, orderType, onlyPublished: true, categoriesId});
             return data;
         },
         getProduct: (async (_, {id}) => {
