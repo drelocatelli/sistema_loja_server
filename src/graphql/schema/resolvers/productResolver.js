@@ -11,13 +11,14 @@ async function getFavorite(data, context, userId) {
         clientId: userId
       }
     });
-    data['isFavorite'] = !!favoriteProduct;
 
-  } else {
-    data['isFavorite'] = false;
+    if(favoriteProduct) {
+      return true;
+    }
+
   }
 
-  return data;
+  return false;
 }
 
 async function getProducts(
@@ -134,7 +135,11 @@ module.exports = {
 
       data['photos'] = await getImagesFromFolder(data.id, 'products');
 
-      data.isFavorite = await getFavorite(data, context, context.customerLoggedIn.id);
+      data['isFavorite'] = false;
+
+      if(context && context?.customerLoggedIn) {
+        data['isFavorite'] = await getFavorite(data, context, context.customerLoggedIn.id);
+      } 
 
       return data;
     }, true),
