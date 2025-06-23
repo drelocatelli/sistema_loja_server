@@ -3,7 +3,7 @@ const { checkEntityExists, getImagesFromFolder, getPropsResponse, formatProductA
 const models = require('../../../../models');
 const customerAuthMiddleware = require('../../../middlewares/customerMiddleware');
 
-async function getFavorite(data, userId) {
+async function getFavorite(data, context, userId) {
   if(data && context && userId) {
     const favoriteProduct = await models.favorite_products.findOne({
       where: {
@@ -134,7 +134,7 @@ module.exports = {
 
       data['photos'] = await getImagesFromFolder(data.id, 'products');
 
-      data.isFavorite = await getFavorite(data, context.customerLoggedIn.id);
+      data.isFavorite = await getFavorite(data, context, context.customerLoggedIn.id);
 
       return data;
     }, true),
