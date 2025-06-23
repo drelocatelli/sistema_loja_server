@@ -153,6 +153,7 @@ const typeDefs = gql `
         price: Float!
         quantity: Int!
         is_published: Boolean!
+        isFavorite: Boolean
         attributes: [Attribute]
         deleted_at: String
         created_at: String

@@ -1,6 +1,7 @@
 const authMiddleware = require('../../../middlewares/loginMiddleware');
 const { checkEntityExists, getImagesFromFolder, getPropsResponse, formatProductAttributes } = require('../../../utils');
 const models = require('../../../../models');
+const customerAuthMiddleware = require('../../../middlewares/customerMiddleware');
 
 async function getProducts(
   _,
@@ -92,7 +93,7 @@ module.exports = {
       });
       return data;
     },
-    getProduct: async (_, { id }) => {
+    getProduct: customerAuthMiddleware(async (_, { id }, context) => {
       let data = await models.products.findByPk(id, {
         include: [
           { model: models.categories, as: 'category' },
@@ -110,13 +111,27 @@ module.exports = {
         ],
       });
 
+      
       data = data.toJSON(); // <-- importante!
       data = formatProductAttributes(data);
 
-      //   data['photos'] = await getImagesFromFolder(data.id, 'products');
+      data['photos'] = await getImagesFromFolder(data.id, 'products');
+
+      if(data && context && context.customerLoggedIn) {
+        const favoriteProduct = await models.favorite_products.findOne({
+          where: {
+            productId: id,
+            clientId: context.customerLoggedIn.id
+          }
+        });
+        data['isFavorite'] = !!favoriteProduct;
+
+      } else {
+        data['isFavorite'] = false;
+      }
 
       return data;
-    },
+    }, true),
   },
 
   Mutation: {
