@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
 const models = require('../../models');
 
-const customerAuthMiddleware = (resolve, userCanPass = false) => async (parent, args, context, info) => {
+const customerAuthMiddleware = (resolve, usetNotLoggedInCanPass = false) => async (parent, args, context, info) => {
     
     try {
         const token = context.req.headers.authorization?.split(' ')[1];
     
-        if(!userCanPass && !token) {
+        if(!usetNotLoggedInCanPass && !token) {
             throw new Error('É necessário estar autenticado');
         }
 

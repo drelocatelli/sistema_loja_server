@@ -19,4 +19,3 @@ deploy:
 
 	# Sobe os containers no servidor
 	ssh $(HOST_RACCOON) 'cd ~/containers/raccoon-store-server && docker compose up -d --build'
-
